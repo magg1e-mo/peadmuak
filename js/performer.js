@@ -28,6 +28,8 @@ function ago(t) {
   return min < 1 ? 'เมื่อสักครู่' : min < 60 ? `${min} นาทีที่แล้ว` : `${Math.floor(min / 60)} ชม.ที่แล้ว`;
 }
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+// ชื่อคนส่ง: ตัวหนา ใหญ่ขึ้น มีคำว่า "คุณ" นำหน้า (ถ้าไม่ได้ใส่ชื่อ จะขึ้น "ไม่ระบุชื่อ")
+const who = (n) => { n = String(n || '').trim(); return n ? `<b class="who">${esc(/^คุณ/.test(n) ? n : 'คุณ' + n)}</b>` : '<span class="who none">ไม่ระบุชื่อ</span>'; };
 
 // ---------- ล็อกอิน ----------
 if (!configured) {
@@ -205,7 +207,7 @@ function renderQueue() {
         ${i === 0 ? '<span class="tag hot">ถัดไป</span>' : ''}
       </div>
       <div class="row" style="flex-wrap:wrap;gap:6px">
-        <span class="tiny muted">${esc(r.nick || 'ไม่ระบุชื่อ')} ${ago(r.createdAt)}</span>
+        ${who(r.nick)}<span class="tiny muted">${ago(r.createdAt)}</span>
         ${r.matched ? '' : '<span class="tag warn">ไม่อยู่ในลิสต์</span>'}
         ${r.tipAmount ? `<span class="tag ${r.tipConfirmed ? 'ok' : ''}">${r.tipConfirmed ? 'ได้ทิปแล้ว' : 'แจ้งทิป'} ${fmt(r.tipAmount)}</span>` : ''}
       </div>
@@ -220,7 +222,8 @@ function renderQueue() {
     <div class="req">
       <div class="row between">
         <div><div class="money" style="font-size:26px">${fmt(r.tipAmount)}</div>
-        <div class="tiny muted">${r.kind === 'song' ? esc(r.song) : 'ทิปอย่างเดียว'} ${esc(r.nick || '')} ${ago(r.createdAt)}</div></div>
+        <div style="margin-top:2px">${who(r.nick)}</div>
+        <div class="tiny muted">${r.kind === 'song' ? esc(r.song) : 'ทิปอย่างเดียว'} · ${ago(r.createdAt)}</div></div>
       </div>
       <div class="row">
         <button class="btn sm" data-act="tipok" data-id="${r.id}" type="button" style="flex:1">ยอดเข้าแล้ว</button>
