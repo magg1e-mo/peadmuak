@@ -1,0 +1,143 @@
+/* ===== Moshi v2: Navy + Warm ===== */
+:root {
+  --navy: #142652; --navy-2: #1E3A78; --navy-3: #0C1838;
+  --gold: #F2B84B; --gold-2: #FFD98A; --gold-ink: #7A4D00;
+  --cream: #FBF6EC; --cream-2: #F3EBDA;
+  --ink: #14213D; --ink-2: #5A6176; --ink-3: #8D93A5;
+  --line: #E8DFCB; --bg: var(--cream); --card: #FFFFFF;
+  --hot: #E9962A; --hot-ink: #8A5A00; --hot-bg: #FFF4DC; --hot-chip: #FFE7B3;
+  --shadow: 0 1px 2px rgba(20,38,82,.05), 0 12px 32px rgba(20,38,82,.09);
+  --spring: cubic-bezier(.34,1.56,.64,1);
+  --ease: cubic-bezier(.2,.8,.2,1);
+}
+body { background: var(--cream); }
+body::before { /* แสงอุ่นๆ มุมบน */
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(520px 320px at 85% -5%, rgba(242,184,75,.22), transparent 70%), radial-gradient(420px 300px at -10% 105%, rgba(30,58,120,.10), transparent 70%);
+}
+.wrap { position: relative; z-index: 1; padding: 18px 18px 26px; gap: 18px; }
+
+/* ---------- hero ---------- */
+.hero { position: relative; overflow: hidden; border-radius: 28px; padding: 16px 18px 20px; color: #fff; display: flex; flex-direction: column; gap: 16px;
+  background: radial-gradient(260px 160px at 100% 0, rgba(242,184,75,.30), transparent 70%), linear-gradient(155deg, var(--navy-2), var(--navy) 55%, var(--navy-3));
+  box-shadow: 0 14px 34px rgba(20,38,82,.30); animation: heroIn .7s var(--ease) both; }
+.hero::after { content: ''; position: absolute; right: -30px; bottom: -46px; width: 150px; height: 150px; border-radius: 50%; border: 22px solid rgba(255,255,255,.05); }
+.wave { display: none; }
+.live-pill { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; height: 28px; padding: 0 12px 0 10px; border-radius: 99px; background: rgba(255,255,255,.12); font-size: 13px; font-weight: 600; backdrop-filter: blur(6px); transition: background-color .4s; }
+.live-pill i { width: 8px; height: 8px; border-radius: 99px; background: var(--gold); animation: pulseGold 1.8s infinite; }
+.live-pill.off i { background: #8D98B8; animation: none; }
+.live-pill.off { color: #C5CCE0; }
+@keyframes pulseGold { 0% { box-shadow: 0 0 0 0 rgba(242,184,75,.7); } 70% { box-shadow: 0 0 0 9px rgba(242,184,75,0); } 100% { box-shadow: 0 0 0 0 rgba(242,184,75,0); } }
+.brand { display: flex; align-items: center; gap: 14px; position: relative; z-index: 1; }
+.brand-mark { width: 66px; height: 66px; border-radius: 20px; background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.14); display: grid; place-items: center; flex-shrink: 0; animation: capBob 4.2s ease-in-out infinite; }
+.brand-name { font-size: 34px; letter-spacing: -.03em; }
+.brand-sub { font-size: 14px; color: #C9D2EC; margin-top: 2px; }
+@keyframes capBob { 0%,100% { transform: rotate(-4deg) translateY(0); } 50% { transform: rotate(3deg) translateY(-3px); } }
+@keyframes heroIn { from { opacity: 0; transform: translateY(-14px) scale(.97); } to { opacity: 1; transform: none; } }
+
+/* ---------- ฉากพื้นหลัง: โน้ตลอยช้าๆ ---------- */
+.notes-bg { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.notes-bg span { position: absolute; bottom: -40px; color: var(--navy); opacity: 0; font-size: 22px; animation: floatUp linear infinite; }
+@keyframes floatUp { 0% { transform: translateY(0) rotate(0); opacity: 0; } 12% { opacity: .07; } 85% { opacity: .07; } 100% { transform: translateY(-105vh) rotate(24deg); opacity: 0; } }
+
+/* ---------- เปลี่ยนขั้นตอน ---------- */
+.step:not([hidden]) { animation: stepIn .45s var(--ease) both; }
+.step:not([hidden]) > * { animation: rise .55s var(--ease) both; }
+.step:not([hidden]) > *:nth-child(1) { animation-delay: .03s; }
+.step:not([hidden]) > *:nth-child(2) { animation-delay: .09s; }
+.step:not([hidden]) > *:nth-child(3) { animation-delay: .15s; }
+.step:not([hidden]) > *:nth-child(4) { animation-delay: .21s; }
+.step:not([hidden]) > *:nth-child(5) { animation-delay: .27s; }
+.step:not([hidden]) > *:nth-child(6) { animation-delay: .33s; }
+@keyframes stepIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.step { gap: 14px; }
+
+/* ---------- การ์ด / ฟอร์ม ---------- */
+.card { border-radius: 26px; border: 1px solid rgba(232,223,203,.7); }
+.note { background: var(--hot-bg); color: #6B4500; border-radius: 18px; }
+.input { background: var(--cream); border-color: var(--line); height: 54px; border-radius: 16px; transition: border-color .2s, background-color .2s, box-shadow .25s, transform .25s var(--spring); }
+.input:focus { border-color: var(--navy); background: #fff; box-shadow: 0 0 0 4px rgba(20,38,82,.09); transform: translateY(-1px); }
+.input.ok { border-color: var(--ok); background: var(--ok-bg); }
+.match .tick { animation: pop .5s var(--spring) both; }
+.match, .suggest { animation: okin .4s var(--spring) both; }
+.queue { display: flex; align-items: center; gap: 10px; padding: 0 6px; font-size: 14px; color: var(--ink-2); }
+.queue-dots { display: inline-flex; gap: 4px; }
+.queue-dots i { width: 6px; height: 6px; border-radius: 99px; background: var(--gold); animation: dots 1.2s infinite; }
+.queue-dots i:nth-child(2) { animation-delay: .15s; } .queue-dots i:nth-child(3) { animation-delay: .3s; }
+@keyframes dots { 0%,60%,100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-5px); opacity: 1; } }
+
+/* ---------- ปุ่ม ---------- */
+.btn { position: relative; overflow: hidden; height: 58px; border-radius: 20px; background: var(--navy); box-shadow: 0 8px 20px rgba(20,38,82,.25); transition: transform .25s var(--spring), box-shadow .25s, background-color .3s, opacity .3s; }
+.btn:active:not(:disabled) { transform: scale(.96); box-shadow: 0 3px 8px rgba(20,38,82,.2); }
+.btn:disabled { background: #CFCDC6; box-shadow: none; }
+.btn:not(:disabled):not(.ghost):not(.text)::after { content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.22), transparent); transform: skewX(-20deg); animation: shine 3.6s ease-in-out infinite; }
+@keyframes shine { 0%, 55% { left: -60%; } 100% { left: 130%; } }
+.btn.ghost { background: transparent; box-shadow: none; border: 1.5px solid var(--line); color: var(--ink); }
+.btn.text { box-shadow: none; background: transparent; }
+.btn.gold { background: linear-gradient(180deg, var(--gold-2), var(--gold)); color: #3D2800; box-shadow: 0 10px 24px rgba(242,184,75,.45); }
+.btn.sm { height: 40px; box-shadow: none; }
+
+.chip { height: 50px; border-radius: 16px; border-color: var(--line); transition: transform .3s var(--spring), background-color .2s, color .2s, border-color .2s, box-shadow .25s; }
+.chip:active { transform: scale(.93); }
+.chip[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: var(--gold-2); transform: translateY(-2px) scale(1.04); box-shadow: 0 8px 18px rgba(20,38,82,.28); }
+.pill { background: var(--hot-chip); color: var(--hot-ink); animation: pop .5s var(--spring) both; }
+
+/* ---------- บัตร QR เหมือนตั๋ว ---------- */
+.ticket { position: relative; gap: 12px; }
+.qr { width: 224px; height: 224px; padding: 10px; background: #fff; border: 1.5px dashed var(--line); border-radius: 18px; transition: opacity .2s, transform .35s var(--spring); }
+.qr.swap { opacity: .25; transform: scale(.95); }
+.amount { font-size: 40px; color: var(--navy); font-variant-numeric: tabular-nums; }
+.amount.bump { animation: bump .45s var(--spring); }
+@keyframes bump { 0% { transform: scale(1); } 40% { transform: scale(1.14); } 100% { transform: scale(1); } }
+.pp-id { background: var(--cream); }
+
+/* ---------- ตอนยังไม่ได้เล่น ---------- */
+.sleepy { align-items: center; text-align: center; gap: 10px; padding: 26px 20px; }
+.sleep-cap { position: relative; width: 120px; height: 90px; display: grid; place-items: center; animation: breathe 3.6s ease-in-out infinite; }
+.zzz { position: absolute; right: 2px; top: -6px; }
+.zzz b { position: absolute; font-family: var(--display); color: var(--gold); opacity: 0; font-size: 18px; animation: zz 3s infinite; }
+.zzz b:nth-child(2) { animation-delay: 1s; font-size: 14px; } .zzz b:nth-child(3) { animation-delay: 2s; font-size: 11px; }
+@keyframes zz { 0% { transform: translate(0,10px) scale(.6); opacity: 0; } 30% { opacity: 1; } 100% { transform: translate(14px,-26px) scale(1.1); opacity: 0; } }
+@keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+/* ---------- เสร็จ: มาสคอตหมวก ---------- */
+.stage { position: relative; width: 220px; height: 190px; display: grid; place-items: center; }
+.glow { position: absolute; width: 190px; height: 190px; border-radius: 50%; background: radial-gradient(circle, rgba(242,184,75,.5), rgba(242,184,75,0) 68%); animation: glowIn .9s var(--ease) both, glowPulse 2.6s 1s ease-in-out infinite; }
+@keyframes glowIn { from { transform: scale(.2); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes glowPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+.mascot { position: relative; animation: mascotIn .9s var(--spring) both; transform-origin: 50% 90%; }
+.mascot svg { display: block; animation: hop 1.6s .9s var(--ease) infinite; transform-origin: 50% 100%; filter: drop-shadow(0 10px 14px rgba(20,38,82,.25)); }
+.mascot .shadow { position: absolute; left: 50%; bottom: -14px; width: 90px; height: 12px; margin-left: -45px; border-radius: 50%; background: rgba(20,38,82,.16); animation: shadowHop 1.6s .9s var(--ease) infinite; }
+.mascot .eye { transform-box: fill-box; transform-origin: center; animation: blink 4s 1.4s infinite; }
+@keyframes mascotIn { 0% { transform: translateY(70px) scale(.2) rotate(-20deg); opacity: 0; } 60% { transform: translateY(-14px) scale(1.12) rotate(6deg); opacity: 1; } 100% { transform: none; } }
+@keyframes hop { 0%,100% { transform: translateY(0) scale(1,1) rotate(-3deg); } 12% { transform: translateY(0) scale(1.07,.92) rotate(-3deg); } 45% { transform: translateY(-20px) scale(.96,1.05) rotate(4deg); } 80% { transform: translateY(0) scale(1.05,.95) rotate(-3deg); } }
+@keyframes shadowHop { 0%,100% { transform: scale(1); opacity: 1; } 45% { transform: scale(.7); opacity: .5; } }
+@keyframes blink { 0%,92%,100% { transform: scaleY(1); } 95% { transform: scaleY(.1); } }
+#stepDone .display, #stepDone #doneSub, #stepDone #again { animation: rise .6s var(--ease) both; }
+#stepDone .display { animation-delay: .5s; } #stepDone #doneSub { animation-delay: .62s; } #stepDone #again { animation-delay: .75s; }
+#stepDone .stage { animation: none; }
+
+/* ---------- เอฟเฟกต์ฉลอง (ลอยออกมาจากหมวก) ---------- */
+.burst { position: fixed; inset: 0; pointer-events: none; z-index: 30; overflow: hidden; }
+.burst .p { position: absolute; left: 50%; top: 42%; display: grid; place-items: center; font-weight: 700; will-change: transform, opacity;
+  animation: fly var(--dur) cubic-bezier(.15,.7,.3,1) var(--delay) both; }
+@keyframes fly {
+  0%   { transform: translate(-50%,-50%) scale(0) rotate(0); opacity: 0; }
+  12%  { opacity: 1; transform: translate(calc(-50% + var(--dx) * .35), calc(-50% + var(--dy) * .35)) scale(1.15) rotate(calc(var(--rot) * .3)); }
+  60%  { opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy) + var(--fall))) scale(.9) rotate(var(--rot)); opacity: 0; }
+}
+.p.coin { width: 30px; height: 30px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #FFE9A8, var(--gold) 60%, #C98A12); color: #7A4D00; font-size: 15px; box-shadow: inset 0 -2px 0 rgba(122,77,0,.25), 0 3px 6px rgba(122,77,0,.25); }
+.p.note { color: var(--navy); font-size: 28px; }
+.p.note.g { color: var(--gold); }
+.p.heart { color: #E8574B; font-size: 24px; }
+.p.pick { width: 22px; height: 26px; background: var(--gold); border-radius: 50% 50% 50% 50% / 38% 38% 62% 62%; box-shadow: inset -3px -3px 0 rgba(122,77,0,.2); }
+.p.mini { width: 36px; height: 30px; }
+.p.spark { color: var(--gold-2); font-size: 20px; }
+
+/* ---------- toast ---------- */
+.toast { background: var(--navy); animation: toastIn .45s var(--spring) both; }
+@keyframes toastIn { from { opacity: 0; transform: translate(-50%, 18px) scale(.9); } to { opacity: 1; transform: translate(-50%, 0) scale(1); } }
+
+@media (prefers-reduced-motion: reduce) { .notes-bg, .burst { display: none; } }

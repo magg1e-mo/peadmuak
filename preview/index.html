@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#142652">
+<title>ขอเพลงและทิป · Moshi</title>
+<link rel="icon" type="image/png" sizes="192x192" href="../icons/icon-192.png">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/app.css">
+<link rel="stylesheet" href="v2.css">
+<script>
+['gesturestart','gesturechange','gestureend'].forEach(function(e){document.addEventListener(e,function(ev){ev.preventDefault();});});
+</script>
+<script src="../js/vendor/qrcode.js"></script>
+</head>
+<body>
+
+<!-- สัญลักษณ์หมวก (ใช้ซ้ำ) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="cap" viewBox="0 0 120 100">
+      <path d="M16 68C16 38 36 16 62 16s46 22 46 52z" fill="var(--cap,#fff)"/>
+      <path d="M62 16c-9 14-12 32-10 52" stroke="var(--seam,#142652)" stroke-opacity=".18" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M62 16c9 14 12 32 10 52" stroke="var(--seam,#142652)" stroke-opacity=".18" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="62" cy="15" rx="5" ry="3.4" fill="var(--brim,#F2B84B)"/>
+      <path d="M8 70c0-4 6-6 54-6s54 2 54 6c0 8-10 14-54 14S8 78 8 70z" fill="var(--brim,#F2B84B)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="notes-bg" id="notesBg" aria-hidden="true"></div>
+
+<main class="wrap">
+  <header class="hero">
+    <div class="hero-top">
+      <span id="livePill" class="live-pill off"><i></i><span id="liveText">กำลังเชื่อมต่อ…</span></span>
+    </div>
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg width="44" height="38"><use href="#cap"/></svg>
+      </div>
+      <div>
+        <div id="stageName" class="display brand-name"></div>
+        <div id="venueLine" class="brand-sub"></div>
+      </div>
+    </div>
+    <svg class="wave" viewBox="0 0 400 24" preserveAspectRatio="none" aria-hidden="true"><path d="M0 24V8c60 16 120 16 200 4S340-4 400 8v16z"/></svg>
+  </header>
+
+  <!-- ขั้นที่ 1: ขอเพลง -->
+  <section id="stepForm" class="step col grow" hidden>
+    <div class="note">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8A5A00" stroke-width="1.8" stroke-linecap="round" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+      <span>บางเพลงอาจยังเล่นไม่ได้ หรือเล่นได้ไม่ครบทั้งเพลง ต้องขออภัยไว้ล่วงหน้านะครับ ขอบคุณครับ</span>
+    </div>
+    <div class="card" style="gap:18px">
+      <div class="col">
+        <label class="lbl" for="song">อยากฟังเพลงอะไรครับ</label>
+        <input id="song" class="input" type="text" maxlength="80" autocomplete="off" placeholder="พิมพ์ชื่อเพลง">
+        <div id="matchOk" class="match" hidden>
+          <span class="tick"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <span>เพลงนี้ร้องได้ <strong id="matchLabel"></strong></span>
+        </div>
+        <button id="suggest" class="suggest" type="button" hidden>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5B616E" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <span>หมายถึง <strong id="suggestLabel"></strong> ใช่ไหม</span>
+        </button>
+        <div id="notInList" class="tiny muted" hidden>ยังไม่มีในลิสต์ ส่งคำขอได้ แต่อาจยังเล่นไม่ได้นะครับ</div>
+      </div>
+      <div class="col">
+        <label class="lbl" for="nick">ชื่อเล่น <span class="muted" style="font-weight:400">(ไม่ใส่ก็ได้ครับ)</span></label>
+        <input id="nick" class="input" type="text" maxlength="30" autocomplete="nickname" placeholder="ให้คนเล่นรู้จักคุณ">
+      </div>
+    </div>
+    <div id="queueLine" class="queue" hidden>
+      <span class="queue-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span id="queueText"></span>
+    </div>
+    <div class="grow"></div>
+    <div class="col" style="gap:10px">
+      <button id="submitSong" class="btn" type="button" disabled>ขอเพลงนี้</button>
+      <button id="tipOnly" class="btn ghost" type="button">ทิปอย่างเดียว</button>
+    </div>
+  </section>
+
+  <!-- ตอนยังไม่ได้เล่น -->
+  <section id="stepOff" class="step col grow" hidden>
+    <div class="card sleepy">
+      <div class="sleep-cap" aria-hidden="true">
+        <svg width="96" height="80" style="--cap:#142652;--seam:#fff"><use href="#cap"/></svg>
+        <span class="zzz"><b>z</b><b>z</b><b>z</b></span>
+      </div>
+      <div class="display" style="font-size:24px">ตอนนี้ยังไม่ได้เล่นครับ</div>
+      <p class="muted" style="margin:0">เปิดรับขอเพลงเฉพาะตอนกำลังเล่น ถ้าอยากสนับสนุน ส่งทิปได้ตลอดครับ</p>
+    </div>
+    <div class="grow"></div>
+    <button id="tipOff" class="btn" type="button">ส่งทิป</button>
+  </section>
+
+  <!-- ขั้นที่ 2: ทิป -->
+  <section id="stepTip" class="step col grow" hidden>
+    <div id="songPill" class="pill" hidden>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      <span id="songPillText"></span>
+    </div>
+    <div class="display" style="font-size:24px">ส่งทิปผ่าน PromptPay</div>
+    <div class="chips" id="chips" role="group" aria-label="จำนวนทิป"></div>
+    <div id="customBox" class="col" hidden>
+      <label class="small muted" for="customAmt">จำนวนเงิน (บาท)</label>
+      <input id="customAmt" class="input" type="number" inputmode="numeric" min="1" max="99999" placeholder="เช่น 10" style="background:#fff">
+    </div>
+    <div class="card ticket center" style="align-items:center">
+      <img id="qrImg" class="qr" alt="QR PromptPay สำหรับสแกนจ่าย">
+      <div class="col" style="align-items:center;gap:2px">
+        <div class="amount" id="amountText"></div>
+        <div class="tiny muted" id="satangHint" style="max-width:280px"></div>
+      </div>
+      <div class="pp-id">
+        <div style="text-align:left">
+          <div class="tiny muted">PromptPay</div>
+          <div style="font-weight:600" id="ppNumber"></div>
+          <div class="tiny muted" id="ppName"></div>
+        </div>
+        <button id="copyPP" class="btn ghost sm" type="button">คัดลอกเบอร์</button>
+      </div>
+      <div class="tiny muted">สแกนจากมือถือเครื่องนี้: กดค้างที่รูป QR เพื่อบันทึก แล้วเปิดแอปธนาคาร เลือกสแกนจากรูปในเครื่อง</div>
+      <a id="saveQR" class="btn ghost sm" download="promptpay.png" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none">บันทึกรูป QR</a>
+    </div>
+    <div class="grow"></div>
+    <div class="col" style="gap:10px">
+      <button id="paid" class="btn gold" type="button">โอนแล้ว</button>
+      <button id="skip" class="btn text" type="button">ข้ามไปก่อน</button>
+    </div>
+  </section>
+
+  <!-- ขั้นที่ 3: เสร็จ -->
+  <section id="stepDone" class="step col grow center" hidden>
+    <div class="stage" id="stage">
+      <div class="glow"></div>
+      <div class="mascot" id="mascot">
+        <svg viewBox="0 0 120 100" width="150" height="125" style="--cap:#142652;--seam:#fff;overflow:visible">
+          <use href="#cap"/>
+          <g class="face">
+            <ellipse class="eye" cx="48" cy="48" rx="4.2" ry="5.4" fill="#fff"/>
+            <ellipse class="eye" cx="76" cy="48" rx="4.2" ry="5.4" fill="#fff"/>
+            <path class="smile" d="M52 58q10 9 20 0" stroke="#fff" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+            <ellipse cx="40" cy="58" rx="5" ry="3" fill="#F2B84B" opacity=".55"/>
+            <ellipse cx="84" cy="58" rx="5" ry="3" fill="#F2B84B" opacity=".55"/>
+          </g>
+        </svg>
+        <span class="shadow"></span>
+      </div>
+    </div>
+    <div class="display" style="font-size:30px" id="doneTitle"></div>
+    <div class="muted" style="max-width:290px" id="doneSub"></div>
+    <button id="again" class="btn ghost" type="button" style="width:auto;padding:0 28px">ขอเพลงอื่นอีก</button>
+  </section>
+
+  <div id="errorBox" class="note warn" hidden></div>
+</main>
+<div id="burst" class="burst" aria-hidden="true"></div>
+<div id="toast" class="toast" hidden></div>
+<script type="module" src="audience.js"></script>
+</body>
+</html>
