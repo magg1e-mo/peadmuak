@@ -1,0 +1,90 @@
+/* ===== หน้าคนเล่น: Navy + Warm แบบเรียบ ไม่มีแอนิเมชัน ===== */
+:root {
+  --navy: #142652; --navy-2: #1E3A78;
+  --gold: #F2B84B; --gold-2: #FFD98A; --gold-ink: #7A4D00;
+  --cream: #FBF6EC; --line: #E6DCC6;
+  --ink: #14213D; --ink-2: #566079; --ink-3: #8D93A5;
+  --bg: var(--cream); --hot: var(--gold); --hot-ink: #7A4D00; --hot-bg: #FFF4DC; --hot-chip: #FFE7B3;
+  --shadow: 0 1px 2px rgba(20,38,82,.06), 0 6px 18px rgba(20,38,82,.07);
+}
+/* ไม่มีแอนิเมชันเลย: เรียบ เร็ว กดแล้วเห็นผลทันที */
+*, *::before, *::after { animation: none !important; transition: none !important; }
+body { background: var(--cream); }
+.wrap { padding: 14px 16px 28px; gap: 14px; }
+
+/* แถบหัว */
+.pbar { display: flex; align-items: center; gap: 12px; background: var(--navy); color: #fff; border-radius: 20px; padding: 10px 14px 10px 10px; }
+.pbar-mark { width: 44px; height: 44px; border-radius: 14px; background: rgba(255,255,255,.1); display: grid; place-items: center; flex-shrink: 0; }
+.pbar-name { display: flex; flex-direction: column; line-height: 1.15; flex: 1; }
+.pbar-name b { font-family: var(--display); font-size: 20px; letter-spacing: -.02em; }
+.pbar-name span { font-size: 12.5px; color: #B9C4E0; }
+.pbar-state { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 12px; border-radius: 99px; background: rgba(255,255,255,.12); font-size: 13px; font-weight: 600; color: #C5CCE0; white-space: nowrap; }
+.pbar-state::before { content: ''; width: 8px; height: 8px; border-radius: 99px; background: #8D98B8; }
+.pbar-state.on { color: #fff; }
+.pbar-state.on::before { background: var(--gold); }
+.pbar[hidden] { display: none; }
+
+/* แท็บ */
+.tabs { background: #EADFC6; border-radius: 16px; padding: 4px; }
+.tab { height: 46px; border-radius: 12px; font-size: 16px; }
+.tab[aria-selected="true"] { background: var(--navy); color: #fff; box-shadow: none; }
+
+/* การ์ด */
+.card { border: 1px solid #EFE6D2; border-radius: 22px; }
+.note { background: var(--hot-bg); color: #6B4500; }
+.note.warn { background: #FFF1CC; color: #6B4500; }
+.input { background: var(--cream); border-color: var(--line); height: 54px; }
+.input:focus { border-color: var(--navy); background: #fff; box-shadow: 0 0 0 3px rgba(20,38,82,.12); }
+label.lbl { color: var(--ink); }
+
+/* ปุ่ม: ใหญ่ ชัด กดง่ายด้วยมือเดียว */
+.btn { height: 58px; border-radius: 18px; background: var(--navy); box-shadow: none; }
+.btn:active:not(:disabled) { transform: none; background: var(--navy-2); }
+.btn:disabled { background: #D4D0C6; color: #fff; }
+.btn.hot { background: var(--gold); color: #2B1B00; font-weight: 700; }
+.btn.hot:active:not(:disabled) { background: #E2A62E; }
+.btn.hot:disabled { background: #EADFC6; color: #A99C7E; }
+.btn.ghost { background: #fff; border: 1.5px solid var(--line); color: var(--ink); }
+.btn.ghost:active:not(:disabled) { background: var(--cream); }
+.btn.text { background: transparent; color: var(--ink-2); }
+.btn.sm { height: 48px; border-radius: 14px; font-size: 16px; }
+
+/* ตัวเลือก */
+.venue { border-color: var(--line); min-height: 52px; border-radius: 16px; font-size: 16px; }
+.venue[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: #fff; }
+.chip { height: 58px; border-radius: 16px; border-color: var(--line); font-size: 19px; }
+.chip:active { background: #EADFC6; }
+.chip[aria-pressed="true"] { background: var(--navy); color: var(--gold-2); border-color: var(--navy); }
+.seg { border-color: var(--line); border-radius: 16px; }
+.seg button { height: 50px; font-size: 16px; }
+.seg button[aria-pressed="true"] { background: var(--navy); color: #fff; }
+
+/* ตัวเลขเงิน */
+.money { color: var(--navy); }
+.split > div, .stat3 > div { background: var(--cream); }
+.live-dot { background: var(--gold); }
+.live-label { color: var(--gold-ink); font-size: 15px; font-variant-numeric: tabular-nums; }
+
+/* คิวเพลง */
+.req { border: 1px solid #EFE6D2; border-radius: 20px; padding: 16px; }
+.req.next { outline: none; border: 2.5px solid var(--gold); background: #FFFBEF; }
+.req-song { font-size: 19px; }
+.tag { background: #F1ECDD; color: var(--ink-2); }
+.tag.hot { background: var(--gold); color: #2B1B00; }
+.tag.ok { background: #E7F6EC; color: #166534; }
+.tag.warn { background: #FFF1CC; color: #6B4500; }
+
+/* สถิติ */
+.bar { background: var(--gold); }
+.bar-track { background: #F1ECDD; }
+.hours div { background: var(--navy); }
+.list-row { border-top-color: #EFE6D2; }
+
+/* กล่องยืนยันจบรอบ (ทับสไตล์ที่ฉีดโดยสคริปต์) */
+body .sheet-bg { background: rgba(20,33,61,.5); }
+body .sheet { background: #fff; border-radius: 26px 26px 0 0; }
+body .sheet-card { background: var(--cream); }
+body .sheet-card .v { color: var(--navy); }
+body .sheet-grab { background: #D9D2BF; }
+
+.toast { background: var(--navy); }
