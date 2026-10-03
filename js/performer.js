@@ -99,6 +99,8 @@ let tab = 'live';
 $('tabLive').onclick = () => { tab = 'live'; renderTab(); };
 $('tabStats').onclick = () => { tab = 'stats'; renderTab(); loadStats(); };
 function renderTab() {
+  const ps = $('pbarState');
+  if (ps) { ps.className = 'pbar-state' + (S.live ? ' on' : ''); ps.textContent = S.live ? 'กำลังเล่น' : 'ยังไม่ได้เล่น'; }
   $('tabLive').setAttribute('aria-selected', String(tab === 'live'));
   $('tabStats').setAttribute('aria-selected', String(tab === 'stats'));
   $('pStats').hidden = tab !== 'stats';
