@@ -1,0 +1,51 @@
+rules_version = '2';
+// กฎความปลอดภัยของแอปเปิดหมวก
+// - คนดู: อ่านสถานะรอบเล่นได้, ส่งคำขอเพลง/แจ้งทิปได้เฉพาะตอนกำลังเล่น, อ่านข้อมูลอื่นไม่ได้
+// - คนเล่น: ล็อกอิน Google ด้วยอีเมลด้านล่างเท่านั้น ถึงจะเห็นคิว รายได้ และสถิติ
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isPerformer() {
+      return request.auth != null
+        && request.auth.token.email == 'momoshi5669@gmail.com'
+        && request.auth.token.email_verified == true;
+    }
+
+    function validRequest(sid) {
+      let st = get(/databases/$(database)/documents/public/state).data;
+      let d = request.resource.data;
+      return st.live == true && st.sessionId == sid
+        && d.keys().hasAll(['kind', 'song', 'matched', 'nick', 'tipAmount', 'createdAt', 'status'])
+        && d.keys().hasOnly(['kind', 'song', 'matched', 'nick', 'tipAmount', 'createdAt', 'status'])
+        && d.kind in ['song', 'tip']
+        && d.song is string && d.song.size() <= 80
+        && (d.kind == 'tip' || d.song.size() > 0)
+        && d.matched is bool
+        && d.nick is string && d.nick.size() <= 30
+        && (d.tipAmount == null || (d.tipAmount is number && d.tipAmount > 0 && d.tipAmount < 100000))
+        && d.status == 'queued'
+        && d.createdAt == request.time;
+    }
+
+    match /public/state {
+      allow read: if true;
+      allow write: if isPerformer();
+    }
+
+    match /sessions/{sid} {
+      allow read, write: if isPerformer();
+
+      match /requests/{rid} {
+        allow read, update, delete: if isPerformer();
+        allow create: if isPerformer() || validRequest(sid);
+      }
+      match /entries/{eid} {
+        allow read, write: if isPerformer();
+      }
+    }
+
+    match /stats/{docId} {
+      allow read, write: if isPerformer();
+    }
+  }
+}

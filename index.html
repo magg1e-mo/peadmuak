@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F5F6F8">
+<title>ขอเพลงและทิป</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎸</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/vendor/qrcode.js"></script>
+</head>
+<body>
+<main class="wrap">
+  <header class="col" style="gap:14px">
+    <div class="row" style="gap:8px">
+      <span id="liveDot" class="live-dot off"></span>
+      <span id="liveText" class="live-label" style="color:var(--ink-2)">กำลังเชื่อมต่อ…</span>
+    </div>
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      </div>
+      <div>
+        <div id="stageName" class="display brand-name"></div>
+        <div id="venueLine" class="muted small"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ขั้นที่ 1: ขอเพลง -->
+  <section id="stepForm" class="col grow" style="gap:14px" hidden>
+    <div class="note">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9A3412" stroke-width="1.8" stroke-linecap="round" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+      <span>บางเพลงอาจยังเล่นไม่ได้ หรือเล่นได้ไม่ครบทั้งเพลง ต้องขออภัยไว้ล่วงหน้านะครับ ขอบคุณครับ</span>
+    </div>
+    <div class="card" style="gap:18px">
+      <div class="col">
+        <label class="lbl" for="song">อยากฟังเพลงอะไรครับ</label>
+        <input id="song" class="input" type="text" maxlength="80" autocomplete="off" placeholder="พิมพ์ชื่อเพลง">
+        <div id="matchOk" class="match" hidden>
+          <span class="tick"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <span>เพลงนี้ร้องได้ <strong id="matchLabel"></strong></span>
+        </div>
+        <button id="suggest" class="suggest" type="button" hidden>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5B616E" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <span>หมายถึง <strong id="suggestLabel"></strong> ใช่ไหม</span>
+        </button>
+        <div id="notInList" class="tiny muted" hidden>ยังไม่มีในลิสต์ ส่งคำขอได้ แต่อาจยังเล่นไม่ได้นะครับ</div>
+      </div>
+      <div class="col">
+        <label class="lbl" for="nick">ชื่อเล่น <span class="muted" style="font-weight:400">(ไม่ใส่ก็ได้ครับ)</span></label>
+        <input id="nick" class="input" type="text" maxlength="30" autocomplete="nickname" placeholder="ให้คนเล่นรู้จักคุณ">
+      </div>
+    </div>
+    <div id="queueLine" class="row muted small" style="padding:0 4px" hidden>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5B616E" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      <span id="queueText"></span>
+    </div>
+    <div class="grow"></div>
+    <div class="col" style="gap:10px">
+      <button id="submitSong" class="btn" type="button" disabled>ขอเพลงนี้</button>
+      <button id="tipOnly" class="btn ghost" type="button">ทิปอย่างเดียว</button>
+    </div>
+  </section>
+
+  <!-- ตอนยังไม่ได้เล่น -->
+  <section id="stepOff" class="col grow" style="gap:14px" hidden>
+    <div class="card">
+      <div class="display" style="font-size:24px">ตอนนี้ยังไม่ได้เล่นครับ</div>
+      <p class="muted" style="margin:0">เปิดรับขอเพลงเฉพาะตอนกำลังเล่น ถ้าอยากสนับสนุน ส่งทิปได้ตลอดครับ</p>
+    </div>
+    <div class="grow"></div>
+    <button id="tipOff" class="btn" type="button">ส่งทิป</button>
+  </section>
+
+  <!-- ขั้นที่ 2: ทิป -->
+  <section id="stepTip" class="col grow" style="gap:16px" hidden>
+    <div id="songPill" class="pill" hidden>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9A3412" stroke-width="2" stroke-linecap="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      <span id="songPillText"></span>
+    </div>
+    <div class="display" style="font-size:24px">ส่งทิปผ่าน PromptPay</div>
+    <div class="chips" id="chips" role="group" aria-label="จำนวนทิป"></div>
+    <div id="customBox" class="col" hidden>
+      <label class="small muted" for="customAmt">จำนวนเงิน (บาท)</label>
+      <input id="customAmt" class="input" type="number" inputmode="numeric" min="1" max="99999" placeholder="เช่น 10" style="background:#fff">
+    </div>
+    <div class="card center" style="align-items:center">
+      <img id="qrImg" class="qr" alt="QR PromptPay สำหรับสแกนจ่าย">
+      <div class="col" style="align-items:center;gap:2px">
+        <div class="amount" id="amountText"></div>
+        <div class="tiny muted" id="satangHint" style="max-width:280px"></div>
+      </div>
+      <div class="pp-id">
+        <div style="text-align:left">
+          <div class="tiny muted">PromptPay</div>
+          <div style="font-weight:600" id="ppNumber"></div>
+          <div class="tiny muted" id="ppName"></div>
+        </div>
+        <button id="copyPP" class="btn ghost sm" type="button">คัดลอกเบอร์</button>
+      </div>
+      <div class="tiny muted">สแกนจากมือถือเครื่องนี้: กดค้างที่รูป QR เพื่อบันทึก แล้วเปิดแอปธนาคาร เลือกสแกนจากรูปในเครื่อง</div>
+      <a id="saveQR" class="btn ghost sm" download="promptpay.png" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none">บันทึกรูป QR</a>
+    </div>
+    <div class="grow"></div>
+    <div class="col" style="gap:10px">
+      <button id="paid" class="btn" type="button">โอนแล้ว</button>
+      <button id="skip" class="btn text" type="button">ข้ามไปก่อน</button>
+    </div>
+  </section>
+
+  <!-- ขั้นที่ 3: เสร็จ -->
+  <section id="stepDone" class="col grow center" style="gap:18px" hidden>
+    <div class="done-mark"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+    <div class="display" style="font-size:28px" id="doneTitle"></div>
+    <div class="muted" style="max-width:290px" id="doneSub"></div>
+    <button id="again" class="btn ghost" type="button" style="width:auto;padding:0 28px">ขอเพลงอื่นอีก</button>
+  </section>
+
+  <div id="errorBox" class="note warn" hidden></div>
+</main>
+<div id="toast" class="toast" hidden></div>
+<script type="module" src="js/audience.js"></script>
+</body>
+</html>
