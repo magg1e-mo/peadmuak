@@ -37,8 +37,43 @@
       <button class="tab" role="tab" id="tabStats" aria-selected="false" type="button">สถิติ</button>
     </div>
 
+    <!-- นับยอดปิดรอบ -->
+    <div id="pClose" class="col" style="gap:16px" hidden>
+      <div class="col" style="gap:2px">
+        <div class="display" style="font-size:28px">นับยอดปิดรอบ</div>
+        <div class="small muted" id="cMeta"></div>
+      </div>
+      <div class="card" style="gap:18px">
+        <div class="col">
+          <label class="lbl" for="cCash">เงินสดที่นับได้ทั้งหมด (บาท)</label>
+          <input id="cCash" class="input" type="number" inputmode="decimal" min="0" placeholder="นับจากกล่องหมวกทั้งหมด">
+          <div class="tiny muted" id="cCashHint"></div>
+        </div>
+        <div class="col">
+          <label class="lbl" for="cTrans">ยอดโอนเข้าบัญชีรอบนี้ทั้งหมด (บาท)</label>
+          <input id="cTrans" class="input" type="number" inputmode="decimal" min="0" placeholder="รวมจากแอปธนาคาร">
+          <div class="tiny muted" id="cTransHint"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="small muted">รายรับรอบนี้หลังนับยอด</div>
+        <div class="money" id="cTotal">฿0</div>
+        <div class="split">
+          <div><div class="tiny muted">เงินสด</div><div style="font-weight:700" id="cCashAfter">฿0</div></div>
+          <div><div class="tiny muted">โอน PromptPay</div><div style="font-weight:700" id="cTransAfter">฿0</div></div>
+        </div>
+      </div>
+      <p class="tiny muted" style="margin:0">ช่องไหนเว้นว่าง แอปจะใช้ยอดที่จดไว้ระหว่างเล่นตามเดิม ใส่ยอดที่นับได้จริงทั้งหมด แอปจะคำนวณส่วนต่างและกระจายเข้าช่วงเวลาที่เล่นให้เอง</p>
+      <button id="btnSaveClose" class="btn hot" type="button">บันทึกและปิดรอบ</button>
+      <button id="btnLaterClose" class="btn text" type="button">ไว้นับทีหลัง</button>
+    </div>
+
     <!-- เริ่มรอบ -->
     <div id="pStart" class="col" style="gap:16px" hidden>
+      <div id="unclosedBox" class="col" style="gap:10px" hidden>
+        <div class="note warn"><span>มีรอบที่ยังไม่ได้นับยอด ยอดรวมในสถิติยังไม่ครบ</span></div>
+        <div id="unclosedList" class="col" style="gap:8px"></div>
+      </div>
       <div class="display" style="font-size:28px">วันนี้เล่นที่ไหน</div>
       <div class="venues" id="venues" role="group" aria-label="สถานที่เล่น"></div>
       <input id="venueOther" class="input" type="text" maxlength="60" placeholder="พิมพ์ชื่อสถานที่" hidden>
