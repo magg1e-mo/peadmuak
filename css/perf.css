@@ -96,3 +96,6 @@ body .sheet-grab { background: #D9D2BF; }
 /* รอยบากหน้าจอ iPhone (แบบ IG): ตอนอยู่บนสุด ใต้ไอคอนเวลา/แบตเป็นพื้นครีมเรียบ ไม่เห็นเบลอ
    หัว Moshi เว้นระยะให้พ้นโซนที่ iOS 26 เบลอ พอเลื่อนลง เนื้อหาลอดใต้ไอคอนและ iOS เบลอให้ตามปกติ */
 :root { padding-top: 0 !important; }
+
+/* แถบครีมตายตัวติดขอบบน: เนื้อหาเลื่อนลอดใต้แถบนี้ ส่วนเบลอของ iOS จะไปเบลอพื้นครีมเรียบๆ จึงมองไม่เห็น */
+body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; height: max(46px, env(safe-area-inset-top, 0px)); background: var(--cream); z-index: 30; pointer-events: none; }
