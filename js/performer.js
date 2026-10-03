@@ -11,7 +11,8 @@ const songsRef = () => doc(db, 'stats', 'songs');
 
 const S = {
   user: null, live: false, sessionId: null, session: null, requests: [],
-  mode: 'cash', undo: [], venue: '', publishedQ: -1, unsubs: [], range: 30, timer: null
+  mode: 'cash', undo: [], venue: '', publishedQ: -1, unsubs: [], range: 30, timer: null,
+  closeId: null, closeSess: null, unclosed: []
 };
 
 const fmt = (n) => {
@@ -74,6 +75,7 @@ function watchState() {
     if (!live && S.live) stopSession();
     S.live = live; S.sessionId = live ? d.sessionId : null;
     S.publishedQ = d.queueCount ?? -1;
+    if (!S.unclosedLoaded) { S.unclosedLoaded = true; loadUnclosed(); }
     renderTab();
   }, (e) => showError('อ่านข้อมูลไม่ได้ (' + e.code + ') ตรวจว่าอีเมลใน firestore.rules ตรงกับบัญชีนี้')));
 }
@@ -100,9 +102,12 @@ function renderTab() {
   $('tabLive').setAttribute('aria-selected', String(tab === 'live'));
   $('tabStats').setAttribute('aria-selected', String(tab === 'stats'));
   $('pStats').hidden = tab !== 'stats';
-  $('pStart').hidden = !(tab === 'live' && !S.live);
+  const showClose = tab === 'live' && !S.live && !!S.closeId;
+  $('pClose').hidden = !showClose;
+  $('pStart').hidden = !(tab === 'live' && !S.live && !S.closeId);
   $('pLive').hidden = !(tab === 'live' && S.live);
-  if (tab === 'live' && !S.live) renderVenues();
+  if (showClose) renderClose();
+  if (tab === 'live' && !S.live && !S.closeId) { renderVenues(); renderUnclosed(); }
 }
 
 // ---------- เริ่มรอบ ----------
@@ -230,6 +235,7 @@ function renderQueue() {
 
 document.addEventListener('click', async (e) => {
   const b = e.target.closest('button[data-act]'); if (!b) return;
+  if (b.dataset.act === 'closeround') { openClose(b.dataset.id); return; }
   const r = S.requests.find((x) => x.id === b.dataset.id); if (!r) return;
   const rRef = doc(db, 'sessions', S.sessionId, 'requests', r.id);
   b.disabled = true;
@@ -261,16 +267,117 @@ function countSongs(list) {
 
 $('btnEnd').onclick = async () => {
   const s = S.session || {};
-  if (!confirm(`จบรอบเล่นที่ ${s.venue || ''}?\nรายรับรอบนี้ ${fmt((s.cash || 0) + (s.transfer || 0))}\nคนดูจะขอเพลงไม่ได้จนกว่าจะเริ่มรอบใหม่`)) return;
+  if (!confirm(`จบรอบเล่นที่ ${s.venue || ''}?\nรายรับรอบนี้ ${fmt((s.cash || 0) + (s.transfer || 0))}\nคนดูจะขอเพลงไม่ได้จนกว่าจะเริ่มรอบใหม่\nจบแล้วจะไปหน้านับยอดปิดรอบต่อทันที`)) return;
   const sid = S.sessionId, sRef = doc(db, 'sessions', sid);
   const left = S.requests.filter((r) => r.kind === 'song' && r.status === 'queued');
   const b = writeBatch(db);
-  b.update(sRef, { live: false, endedAt: serverTimestamp() });
+  b.update(sRef, { live: false, endedAt: serverTimestamp(), closed: false });
   b.set(stateRef(), { live: false, sessionId: null, venue: '', queueCount: 0 });
   left.forEach((r) => b.update(doc(sRef, 'requests', r.id), { status: 'expired' }));
-  try { await b.commit(); countSongs(left); toast('จบรอบแล้ว'); }
-  catch (e) { toast('จบรอบไม่สำเร็จ ลองอีกครั้ง'); }
+  try {
+    await b.commit(); countSongs(left); toast('จบรอบแล้ว');
+    await openClose(sid);
+  } catch (e) { toast('จบรอบไม่สำเร็จ ลองอีกครั้ง'); }
 };
+
+
+// ---------- นับยอดปิดรอบ ----------
+const round2 = (n) => Math.round(n * 100) / 100;
+const num = (id) => { const v = $(id).value.trim(); if (v === '') return null; const n = parseFloat(v); return Number.isFinite(n) && n >= 0 ? n : null; };
+const hhmm = (m) => new Date(m).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+
+// กระจายยอดส่วนต่างไปตามชั่วโมงที่เล่นจริง (ตามจำนวนนาที) เพื่อให้กราฟช่วงเวลาไม่เพี้ยน
+function spreadHours(startMs, endMs, amount) {
+  if (!startMs || !endMs || endMs <= startMs) return { [new Date(startMs || Date.now()).getHours()]: round2(amount) };
+  const w = {}; let cur = startMs;
+  while (cur < endMs) {
+    const d = new Date(cur), next = Math.min(endMs, new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours() + 1).getTime());
+    w[d.getHours()] = (w[d.getHours()] || 0) + (next - cur); cur = next;
+  }
+  const total = Object.values(w).reduce((a, b) => a + b, 0), keys = Object.keys(w), out = {}; let used = 0;
+  keys.forEach((h, i) => {
+    const v = i === keys.length - 1 ? round2(amount - used) : round2((amount * w[h]) / total);
+    out[h] = v; used = round2(used + v);
+  });
+  return out;
+}
+
+async function openClose(sid) {
+  const snap = await getDoc(doc(db, 'sessions', sid));
+  if (!snap.exists()) { toast('ไม่พบรอบนี้'); return; }
+  S.closeId = sid; S.closeSess = snap.data();
+  $('cCash').value = ''; $('cTrans').value = '';
+  renderTab();
+}
+
+function closePreview() {
+  const s = S.closeSess || {};
+  const cc = num('cCash'), ct = num('cTrans');
+  const cashAfter = cc ?? (s.cash || 0), transAfter = ct ?? (s.transfer || 0);
+  const diff = (after, before) => { const d = round2(after - before); return d === 0 ? 'ตรงกับที่จดไว้' : (d > 0 ? `เพิ่ม ${fmt(d)}` : `ลด ${fmt(-d)}`) + ' จากที่จดไว้'; };
+  $('cCashHint').textContent = `แอปจดไว้ ${fmt(s.cash)}` + (cc != null ? ' · ' + diff(cc, s.cash || 0) : '');
+  const st = ms(s.startedAt), en = ms(s.endedAt);
+  $('cTransHint').textContent = `แอปจดไว้ ${fmt(s.transfer)} (เฉพาะทิปที่คุณกดยืนยัน)` + (ct != null ? ' · ' + diff(ct, s.transfer || 0) : '')
+    + (st && en ? ` · ดูยอดเข้าบัญชีช่วง ${hhmm(st)} ถึง ${hhmm(en)}` : '');
+  $('cCashAfter').textContent = fmt(cashAfter); $('cTransAfter').textContent = fmt(transAfter);
+  $('cTotal').textContent = fmt(cashAfter + transAfter);
+}
+function renderClose() {
+  const s = S.closeSess || {}, st = ms(s.startedAt), en = ms(s.endedAt);
+  const d = new Date(st || Date.now());
+  $('cMeta').textContent = `${s.venue || ''} · ${d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' })}` + (st && en ? ` · ${hhmm(st)} ถึง ${hhmm(en)}` : '');
+  closePreview();
+}
+$('cCash').addEventListener('input', closePreview);
+$('cTrans').addEventListener('input', closePreview);
+
+$('btnSaveClose').onclick = async () => {
+  const sid = S.closeId, s = S.closeSess; if (!sid || !s) return;
+  const adj = {};
+  const cc = num('cCash'), ct = num('cTrans');
+  if (cc != null) adj.cash = round2(cc - (s.cash || 0));
+  if (ct != null) adj.transfer = round2(ct - (s.transfer || 0));
+  const sRef = doc(db, 'sessions', sid), b = writeBatch(db);
+  const upd = { closed: true, closedAt: serverTimestamp() };
+  const totalAdj = round2((adj.cash || 0) + (adj.transfer || 0));
+  Object.entries(adj).forEach(([method, v]) => {
+    if (v === 0) return;
+    b.set(doc(collection(sRef, 'entries')), { amount: v, method, requestId: null, kind: 'closing', createdAt: serverTimestamp() });
+    upd[method] = increment(v);
+  });
+  if (totalAdj !== 0) {
+    Object.entries(spreadHours(ms(s.startedAt), ms(s.endedAt) || Date.now(), totalAdj)).forEach(([h, v]) => { upd[`hours.${h}`] = increment(v); });
+  }
+  b.update(sRef, upd);
+  $('btnSaveClose').disabled = true;
+  try {
+    await b.commit();
+    const total = round2((cc ?? (s.cash || 0)) + (ct ?? (s.transfer || 0)));
+    toast(`ปิดรอบแล้ว รวม ${fmt(total)}`);
+    S.closeId = null; S.closeSess = null;
+    await loadUnclosed(); renderTab();
+  } catch (e) { toast('บันทึกไม่สำเร็จ ลองอีกครั้ง'); }
+  finally { $('btnSaveClose').disabled = false; }
+};
+$('btnLaterClose').onclick = async () => { S.closeId = null; S.closeSess = null; await loadUnclosed(); renderTab(); };
+
+// รอบที่จบแล้วแต่ยังไม่ได้นับยอด (แสดงบนหน้าเริ่มรอบ)
+async function loadUnclosed() {
+  try {
+    const qs = await getDocs(query(collection(db, 'sessions'), orderBy('startedAt', 'desc'), limit(20)));
+    S.unclosed = qs.docs.map((d) => ({ id: d.id, ...d.data() })).filter((s) => s.live === false && s.closed === false);
+    if (!S.live && !S.closeId) renderUnclosed();
+  } catch (e) { /* แสดงตอนเปิดหน้าสถิติอยู่แล้ว ไม่ต้องแจ้งซ้ำ */ }
+}
+function renderUnclosed() {
+  $('unclosedBox').hidden = S.unclosed.length === 0;
+  $('unclosedList').innerHTML = S.unclosed.map((s) => {
+    const d = new Date(ms(s.startedAt) || Date.now());
+    return `<div class="req"><div class="row between"><div><div class="req-song">${esc(s.venue)}</div>
+      <div class="tiny muted">${d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' })} · จดไว้ ${fmt((s.cash || 0) + (s.transfer || 0))}</div></div>
+      <button class="btn sm" data-act="closeround" data-id="${s.id}" type="button">นับยอด</button></div></div>`;
+  }).join('');
+}
 
 // ---------- สถิติ ----------
 document.querySelectorAll('[data-range]').forEach((b) => (b.onclick = () => {
@@ -310,7 +417,7 @@ async function loadStats() {
     let hrs = Array.from({ length: 12 }, (_, i) => (14 + i) % 24);
     const outside = Object.keys(hist).some((h) => hist[h] > 0 && !hrs.includes(Number(h)));
     if (outside) hrs = Array.from({ length: 12 }, (_, i) => i * 2);   // มีทิปนอกช่วงเย็น แสดงทั้งวันทีละ 2 ชม.
-    const val = (h) => (hist[h] || 0) + (outside ? (hist[h + 1] || 0) : 0);
+    const val = (h) => Math.max(0, (hist[h] || 0) + (outside ? (hist[h + 1] || 0) : 0));
     const hmax2 = Math.max(1, ...hrs.map(val));
     $('sHours').innerHTML = hrs.map((h) => `<div title="${h}:00 ${fmt(val(h))}" style="height:${(val(h) / hmax2) * 100}%"></div>`).join('');
     $('sHoursLbl').innerHTML = outside
@@ -325,7 +432,7 @@ async function loadStats() {
 
     $('sHistory').innerHTML = rows.length ? rows.slice(0, 30).map((s) => {
       const d = new Date(ms(s.startedAt) || Date.now());
-      return `<div class="list-row"><span>${d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' })} ${esc(s.venue)}${s.live ? ' (กำลังเล่น)' : ''}</span><span style="font-weight:600">${fmt((s.cash || 0) + (s.transfer || 0))}</span></div>`;
+      return `<div class="list-row"><span>${d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' })} ${esc(s.venue)}${s.live ? ' (กำลังเล่น)' : s.closed === false ? ' (ยังไม่นับยอด)' : ''}</span><span style="font-weight:600">${fmt((s.cash || 0) + (s.transfer || 0))}</span></div>`;
     }).join('') : '<div class="small muted">ยังไม่มีรอบเล่น</div>';
     showError('');
   } catch (e) { showError('โหลดสถิติไม่สำเร็จ: ' + e.code); }
