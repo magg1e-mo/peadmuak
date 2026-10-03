@@ -10,7 +10,7 @@
 /* ไม่มีแอนิเมชันเลย: เรียบ เร็ว กดแล้วเห็นผลทันที */
 *, *::before, *::after { animation: none !important; transition: none !important; }
 body { background: var(--cream); }
-.wrap { padding: max(52px, calc(env(safe-area-inset-top, 0px) * 1.6 + 14px)) 16px 28px; gap: 14px; }
+.wrap { padding: 18px 16px 28px; gap: 14px; }
 
 /* แถบหัว */
 .pbar { display: flex; align-items: center; gap: 12px; background: var(--navy); color: #fff; border-radius: 20px; padding: 10px 14px 10px 10px; }
@@ -97,5 +97,8 @@ body .sheet-grab { background: #D9D2BF; }
    หัว Moshi เว้นระยะให้พ้นโซนที่ iOS 26 เบลอ พอเลื่อนลง เนื้อหาลอดใต้ไอคอนและ iOS เบลอให้ตามปกติ */
 :root { padding-top: 0 !important; }
 
-/* แถบครีมตายตัวติดขอบบน: เนื้อหาเลื่อนลอดใต้แถบนี้ ส่วนเบลอของ iOS จะไปเบลอพื้นครีมเรียบๆ จึงมองไม่เห็น */
-body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; height: max(46px, env(safe-area-inset-top, 0px)); background: var(--cream); z-index: 30; pointer-events: none; }
+/* iOS 26: เบลอขอบบนเกิดกับ "การเลื่อนของหน้าเว็บทั้งหน้า"
+   เลยให้หน้าเว็บอยู่นิ่ง แล้วเลื่อนเฉพาะกล่องข้างใน (แบบเดียวกับแอปทั่วไป) ขอบบนจะเป็นแค่ขอบตัดเรียบๆ ไม่มีเบลอ */
+html, body { height: 100%; overflow: hidden; overscroll-behavior: none; background: var(--cream); }
+.wrap { height: 100%; min-height: 0; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+.wrap > * { flex-shrink: 0; }
