@@ -10,10 +10,10 @@
 /* ไม่มีแอนิเมชันเลย: เรียบ เร็ว กดแล้วเห็นผลทันที */
 *, *::before, *::after { animation: none !important; transition: none !important; }
 body { background: var(--cream); }
-.wrap { padding: 0 16px 28px; gap: 14px; }
+.wrap { padding: calc(env(safe-area-inset-top, 0px) * 1.6 + 14px) 16px 28px; gap: 14px; }
 
 /* แถบหัว */
-.pbar { display: flex; align-items: center; gap: 12px; background: var(--navy); color: #fff; margin: 0 -16px; border-radius: 0 0 24px 24px; padding: calc(env(safe-area-inset-top, 0px) + 12px) 18px 14px 14px; }
+.pbar { display: flex; align-items: center; gap: 12px; background: var(--navy); color: #fff; border-radius: 20px; padding: 10px 14px 10px 10px; }
 .pbar-mark { width: 44px; height: 44px; border-radius: 14px; background: #24407F; display: grid; place-items: center; flex-shrink: 0; }
 .pbar-name { display: flex; flex-direction: column; line-height: 1.15; flex: 1; }
 .pbar-name b { font-family: var(--display); font-size: 20px; letter-spacing: -.02em; }
@@ -93,6 +93,7 @@ body .sheet-grab { background: #D9D2BF; }
 .who { font-size: 16px; font-weight: 700; color: var(--ink); }
 .who.none { font-weight: 500; color: var(--ink-2); }
 
-/* รอยบากหน้าจอ (notch/status bar): แถบสีเดียวกับหัวหน้า ทึบ ไม่เบลอ เนื้อหาเลื่อนลอดใต้แถบนี้ */
+/* รอยบากหน้าจอ iPhone: iOS 26 เบลอขอบบนเอง (ปิดจากเว็บไม่ได้)
+   วิธีแก้: ใต้โซนที่ถูกเบลอให้เป็นสีพื้นเรียบ ไม่มีขอบหัวหน้า และใช้แถบทึบสีเดียวกับพื้นหลังบังเนื้อหาที่เลื่อนผ่าน */
 :root { padding-top: 0 !important; }
-body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; height: env(safe-area-inset-top, 0px); background: var(--navy); z-index: 60; pointer-events: none; }
+body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; height: calc(env(safe-area-inset-top, 0px) * 1.6 + 8px); background: linear-gradient(to bottom, var(--cream) calc(100% - 10px), rgba(251,246,236,0)); z-index: 60; pointer-events: none; }
