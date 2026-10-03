@@ -10,7 +10,7 @@
 /* ไม่มีแอนิเมชันเลย: เรียบ เร็ว กดแล้วเห็นผลทันที */
 *, *::before, *::after { animation: none !important; transition: none !important; }
 body { background: var(--cream); }
-.wrap { padding: 18px 16px 28px; gap: 14px; }
+.wrap { padding: 14px 16px 28px; gap: 14px; }
 
 /* แถบหัว */
 .pbar { display: flex; align-items: center; gap: 12px; background: var(--navy); color: #fff; border-radius: 20px; padding: 10px 14px 10px 10px; }
@@ -92,13 +92,3 @@ body .sheet-grab { background: #D9D2BF; }
 /* ชื่อคนส่ง: ตัวหนา อ่านง่าย */
 .who { font-size: 16px; font-weight: 700; color: var(--ink); }
 .who.none { font-weight: 500; color: var(--ink-2); }
-
-/* รอยบากหน้าจอ iPhone (แบบ IG): ตอนอยู่บนสุด ใต้ไอคอนเวลา/แบตเป็นพื้นครีมเรียบ ไม่เห็นเบลอ
-   หัว Moshi เว้นระยะให้พ้นโซนที่ iOS 26 เบลอ พอเลื่อนลง เนื้อหาลอดใต้ไอคอนและ iOS เบลอให้ตามปกติ */
-:root { padding-top: 0 !important; }
-
-/* iOS 26: เบลอขอบบนเกิดกับ "การเลื่อนของหน้าเว็บทั้งหน้า"
-   เลยให้หน้าเว็บอยู่นิ่ง แล้วเลื่อนเฉพาะกล่องข้างใน (แบบเดียวกับแอปทั่วไป) ขอบบนจะเป็นแค่ขอบตัดเรียบๆ ไม่มีเบลอ */
-html, body { height: 100%; overflow: hidden; overscroll-behavior: none; background: var(--cream); }
-.wrap { height: 100%; min-height: 0; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
-.wrap > * { flex-shrink: 0; }
