@@ -109,3 +109,8 @@ label.lbl { font-size: 15px; font-weight: 600; }
 .stat3 b { display: block; font-family: var(--display); font-size: 22px; letter-spacing: -.02em; }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ทำตัวเหมือนแอป: ไม่ซูม ไม่เด้งยืด ไม่ไฮไลต์ตอนแตะ */
+html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; overscroll-behavior: none; }
+body { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; overscroll-behavior: none; }
+button, .tab { user-select: none; -webkit-user-select: none; }
