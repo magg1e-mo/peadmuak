@@ -14,6 +14,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/perf.css?v=1">
 <script>
 /* กันซูมแบบแอปจริง: iOS ไม่สนใจ user-scalable=no จึงดักท่า pinch เอง (double-tap กันด้วย touch-action ใน CSS เพื่อไม่ให้กดรัวๆ พลาด) */
 ['gesturestart','gesturechange','gestureend'].forEach(function(e){document.addEventListener(e,function(ev){ev.preventDefault();});});
@@ -22,9 +23,21 @@
 <body>
 <main class="wrap">
 
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="cap" viewBox="0 0 120 100">
+    <path d="M16 68C16 38 36 16 62 16s46 22 46 52z" fill="#fff"/>
+    <path d="M62 16c-9 14-12 32-10 52M62 16c9 14 12 32 10 52" stroke="#142652" stroke-opacity=".18" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="62" cy="15" rx="5" ry="3.4" fill="#F2B84B"/>
+    <path d="M8 70c0-4 6-6 54-6s54 2 54 6c0 8-10 14-54 14S8 78 8 70z" fill="#F2B84B"/></symbol></defs></svg>
+  <header class="pbar">
+    <div class="pbar-mark" aria-hidden="true"><svg width="30" height="25"><use href="#cap"/></svg></div>
+    <div class="pbar-name"><b>Moshi</b><span>หน้าคนเล่น</span></div>
+    <span id="pbarState" class="pbar-state">ยังไม่ได้เล่น</span>
+  </header>
+
+
   <!-- ล็อกอิน -->
   <section id="vLogin" class="col grow center" style="gap:18px" hidden>
-    <div class="brand-mark" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+    <div class="brand-mark" aria-hidden="true"><svg width="46" height="38"><use href="#cap"/></svg></div>
     <div class="display" style="font-size:28px">หน้าคนเล่น</div>
     <p class="muted" id="loginMsg" style="margin:0;max-width:300px">เข้าสู่ระบบด้วยบัญชี Google ของคุณ เพื่อดูคิวเพลงและรายรับ</p>
     <button id="btnLogin" class="btn" type="button" style="max-width:320px">เข้าสู่ระบบด้วย Google</button>
@@ -153,6 +166,10 @@
   <div id="errorBox" class="note warn" hidden></div>
 </main>
 <div id="toast" class="toast" hidden></div>
-<script type="module" src="js/performer.js"></script>
+<script>
+/* แถบหัว: ซ่อนตอนยังไม่ล็อกอิน */
+(function(){var bar=document.querySelector('.pbar'),lg=document.getElementById('vLogin');function s(){bar.hidden=!lg.hidden;}new MutationObserver(s).observe(lg,{attributes:true,attributeFilter:['hidden']});s();})();
+</script>
+<script type="module" src="js/performer.js?v=2"></script>
 </body>
 </html>
