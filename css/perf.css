@@ -10,7 +10,7 @@
 /* ไม่มีแอนิเมชันเลย: เรียบ เร็ว กดแล้วเห็นผลทันที */
 *, *::before, *::after { animation: none !important; transition: none !important; }
 body { background: var(--cream); }
-.wrap { padding: calc(env(safe-area-inset-top, 0px) * 1.6 + 14px) 16px 28px; gap: 14px; }
+.wrap { padding: max(52px, calc(env(safe-area-inset-top, 0px) * 1.6 + 14px)) 16px 28px; gap: 14px; }
 
 /* แถบหัว */
 .pbar { display: flex; align-items: center; gap: 12px; background: var(--navy); color: #fff; border-radius: 20px; padding: 10px 14px 10px 10px; }
