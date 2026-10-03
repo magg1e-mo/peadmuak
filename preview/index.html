@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/app.css">
-<link rel="stylesheet" href="v2.css?v=3">
+<link rel="stylesheet" href="v2.css?v=4">
 <script>
 ['gesturestart','gesturechange','gestureend'].forEach(function(e){document.addEventListener(e,function(ev){ev.preventDefault();});});
 </script>
@@ -68,7 +68,6 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5B616E" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
           <span>หมายถึง <strong id="suggestLabel"></strong> ใช่ไหม</span>
         </button>
-        <div id="notInList" class="tiny muted" hidden>ยังไม่มีในลิสต์ ส่งคำขอได้ แต่อาจยังเล่นไม่ได้นะครับ</div>
       </div>
       <div class="col">
         <label class="lbl" for="nick">ชื่อเล่น <span class="muted" style="font-weight:400">(ไม่ใส่ก็ได้ครับ)</span></label>
@@ -162,6 +161,6 @@
   <div id="errorBox" class="note warn" hidden></div>
 </main>
 <div id="toast" class="toast" hidden></div>
-<script type="module" src="audience.js?v=3"></script>
+<script type="module" src="audience.js?v=4"></script>
 </body>
 </html>

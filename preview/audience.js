@@ -98,7 +98,6 @@ function renderMatch() {
   if (m.strong) $('matchLabel').textContent = songLabel(m.strong);
   $('suggest').hidden = !m.partial;
   if (m.partial) { $('suggestLabel').textContent = songLabel(m.partial); $('suggest').onclick = () => { state.song = m.partial.title; $('song').value = m.partial.title; renderMatch(); buzz(10); }; }
-  $('notInList').hidden = !(has && !m.strong && !m.partial && state.song.trim().length >= 3);
   $('submitSong').disabled = !has;
 }
 $('song').addEventListener('input', (e) => { state.song = e.target.value; renderMatch(); });
