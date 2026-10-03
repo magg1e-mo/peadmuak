@@ -14,11 +14,11 @@ body { background: var(--cream); }
 
 /* แถบหัว */
 .pbar { display: flex; align-items: center; gap: 12px; background: var(--navy); color: #fff; border-radius: 20px; padding: 10px 14px 10px 10px; }
-.pbar-mark { width: 44px; height: 44px; border-radius: 14px; background: rgba(255,255,255,.1); display: grid; place-items: center; flex-shrink: 0; }
+.pbar-mark { width: 44px; height: 44px; border-radius: 14px; background: #24407F; display: grid; place-items: center; flex-shrink: 0; }
 .pbar-name { display: flex; flex-direction: column; line-height: 1.15; flex: 1; }
 .pbar-name b { font-family: var(--display); font-size: 20px; letter-spacing: -.02em; }
 .pbar-name span { font-size: 12.5px; color: #B9C4E0; }
-.pbar-state { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 12px; border-radius: 99px; background: rgba(255,255,255,.12); font-size: 13px; font-weight: 600; color: #C5CCE0; white-space: nowrap; }
+.pbar-state { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 12px; border-radius: 99px; background: #24407F; font-size: 13px; font-weight: 600; color: #C5CCE0; white-space: nowrap; }
 .pbar-state::before { content: ''; width: 8px; height: 8px; border-radius: 99px; background: #8D98B8; }
 .pbar-state.on { color: #fff; }
 .pbar-state.on::before { background: var(--gold); }
@@ -88,3 +88,7 @@ body .sheet-card .v { color: var(--navy); }
 body .sheet-grab { background: #D9D2BF; }
 
 .toast { background: var(--navy); }
+
+/* ชื่อคนส่ง: ตัวหนา อ่านง่าย */
+.who { font-size: 16px; font-weight: 700; color: var(--ink); }
+.who.none { font-weight: 500; color: var(--ink-2); }
