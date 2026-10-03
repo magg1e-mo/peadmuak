@@ -176,38 +176,22 @@ $('copyPP').onclick = async () => {
   catch (e) { toast('คัดลอกไม่ได้ จดเบอร์ ' + PROMPTPAY_ID + ' แทนได้ครับ'); }
 };
 
-// ---------- ฉลอง: หมวกกระโดด + ของลอยออกมา ----------
-const THANKS = ['ขอบคุณมากครับ', 'ขอบคุณที่ร่วมฟังนะครับ', 'ใจฟูเลยครับ'];
+// ---------- ฉลอง: โน้ตพื้นหลังเพิ่มเยอะ เข้มขึ้น ลอยขึ้นเร็ว ----------
 function celebrate(big) {
   if (reduceMotion) return;
-  const box = $('burst'); box.innerHTML = '';
-  const m = $('mascot').getBoundingClientRect();
-  const ox = m.left + m.width / 2, oy = m.top + m.height * .35;
-  const kinds = big
-    ? ['coin', 'coin', 'coin', 'coin', 'nt', 'nt', 'nt g', 'heart', 'heart', 'pick', 'mini', 'spark']
-    : ['nt', 'nt g', 'heart', 'spark'];
-  const n = big ? 34 : 12;
+  const bg = $('notesBg'), glyphs = ['♪', '♫', '♩', '♬'], n = big ? 46 : 22, made = [];
   for (let i = 0; i < n; i++) {
-    const kind = kinds[i % kinds.length];
-    const p = document.createElement('span');
-    p.className = 'p ' + kind.split(' ').join(' ');
-    const a = (-Math.PI / 2) + (Math.random() - .5) * Math.PI * 1.25; // พุ่งขึ้นเป็นพัด
-    const r = 110 + Math.random() * 190;
-    p.style.left = ox + 'px'; p.style.top = oy + 'px';
-    p.style.setProperty('--dx', Math.cos(a) * r + 'px');
-    p.style.setProperty('--dy', Math.sin(a) * r * 1.1 + 'px');
-    p.style.setProperty('--fall', 90 + Math.random() * 160 + 'px');
-    p.style.setProperty('--rot', (Math.random() - .5) * 720 + 'deg');
-    p.style.setProperty('--dur', 1.5 + Math.random() * 1.1 + 's');
-    p.style.setProperty('--delay', 0.25 + i * 0.035 + 's');
-    if (kind === 'coin') p.textContent = '฿';
-    else if (kind.startsWith('nt')) p.textContent = ['♪', '♫', '♬'][i % 3];
-    else if (kind === 'heart') p.textContent = '♥';
-    else if (kind === 'spark') p.textContent = '✦';
-    else if (kind === 'mini') p.innerHTML = '<svg width="36" height="30" style="--cap:#142652;--seam:#fff"><use href="#cap"/></svg>';
-    box.appendChild(p);
+    const s = document.createElement('span');
+    s.className = 'rush';
+    s.textContent = glyphs[i % glyphs.length];
+    s.style.left = (2 + Math.random() * 96) + '%';
+    s.style.fontSize = (20 + Math.random() * 30) + 'px';
+    s.style.animationDuration = (2.2 + Math.random() * 2) + 's';
+    s.style.animationDelay = (Math.random() * 1.6) + 's';
+    if (i % 4 === 0) s.style.color = '#E9962A';
+    bg.appendChild(s); made.push(s);
   }
-  setTimeout(() => (box.innerHTML = ''), 3600);
+  setTimeout(() => made.forEach((s) => s.remove()), 5200);
   buzz(big ? [25, 40, 25] : 15);
 }
 
@@ -237,8 +221,8 @@ async function send(paid) {
   }
 }
 function finish(paid, hadSong) {
-  $('doneTitle').textContent = hadSong ? 'ได้รับคำขอแล้ว' : THANKS[0];
-  $('doneSub').textContent = paid ? 'ขอบคุณสำหรับการสนับสนุนครับ ขอให้เป็นวันที่ดีนะครับ' : 'ขอบคุณที่ร่วมฟังครับ';
+  $('doneTitle').textContent = hadSong ? 'ได้รับคำขอแล้ว' : 'ขอบคุณมากครับ';
+  $('doneSub').textContent = paid ? 'ขอบคุณสำหรับการสนับสนุนครับ' : 'ขอบคุณที่ร่วมฟังครับ';
   $('again').textContent = state.live ? 'ขอเพลงอื่นอีก' : 'กลับหน้าแรก';
   go('done');
   requestAnimationFrame(() => setTimeout(() => celebrate(paid), 350));
