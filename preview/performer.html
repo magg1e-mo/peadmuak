@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#142652">
+<title>หน้าคนเล่น · Moshi</title>
+<link rel="icon" type="image/png" sizes="192x192" href="../icons/icon-192.png">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="Moshi">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/app.css">
+<link rel="stylesheet" href="perf.css?v=1">
+<script>
+/* กันซูมแบบแอปจริง: iOS ไม่สนใจ user-scalable=no จึงดักท่า pinch เอง (double-tap กันด้วย touch-action ใน CSS เพื่อไม่ให้กดรัวๆ พลาด) */
+['gesturestart','gesturechange','gestureend'].forEach(function(e){document.addEventListener(e,function(ev){ev.preventDefault();});});
+</script>
+</head>
+<body>
+<main class="wrap">
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="cap" viewBox="0 0 120 100">
+    <path d="M16 68C16 38 36 16 62 16s46 22 46 52z" fill="#fff"/>
+    <path d="M62 16c-9 14-12 32-10 52M62 16c9 14 12 32 10 52" stroke="#142652" stroke-opacity=".18" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="62" cy="15" rx="5" ry="3.4" fill="#F2B84B"/>
+    <path d="M8 70c0-4 6-6 54-6s54 2 54 6c0 8-10 14-54 14S8 78 8 70z" fill="#F2B84B"/></symbol></defs></svg>
+  <header class="pbar">
+    <div class="pbar-mark" aria-hidden="true"><svg width="30" height="25"><use href="#cap"/></svg></div>
+    <div class="pbar-name"><b>Moshi</b><span>หน้าคนเล่น</span></div>
+    <span id="pbarState" class="pbar-state">ยังไม่ได้เล่น</span>
+  </header>
+
+  <!-- ล็อกอิน -->
+  <section id="vLogin" class="col grow center" style="gap:18px" hidden>
+    <div class="brand-mark" aria-hidden="true"><svg width="46" height="38"><use href="#cap"/></svg></div>
+    <div class="display" style="font-size:28px">หน้าคนเล่น</div>
+    <p class="muted" id="loginMsg" style="margin:0;max-width:300px">เข้าสู่ระบบด้วยบัญชี Google ของคุณ เพื่อดูคิวเพลงและรายรับ</p>
+    <button id="btnLogin" class="btn" type="button" style="max-width:320px">เข้าสู่ระบบด้วย Google</button>
+  </section>
+
+  <!-- หลังล็อกอิน -->
+  <section id="vApp" class="col grow" style="gap:16px" hidden>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tabLive" aria-selected="true" type="button">รอบเล่น</button>
+      <button class="tab" role="tab" id="tabStats" aria-selected="false" type="button">สถิติ</button>
+    </div>
+
+    <!-- นับยอดปิดรอบ -->
+    <div id="pClose" class="col" style="gap:16px" hidden>
+      <div class="col" style="gap:2px">
+        <div class="display" style="font-size:28px">นับยอดปิดรอบ</div>
+        <div class="small muted" id="cMeta"></div>
+      </div>
+      <div class="card" style="gap:18px">
+        <div class="col">
+          <label class="lbl" for="cCash">เงินสดที่นับได้ทั้งหมด (บาท)</label>
+          <input id="cCash" class="input" type="number" inputmode="decimal" min="0" placeholder="นับจากกล่องหมวกทั้งหมด">
+          <div class="tiny muted" id="cCashHint"></div>
+        </div>
+        <div class="col">
+          <label class="lbl" for="cTrans">ยอดโอนเข้าบัญชีรอบนี้ทั้งหมด (บาท)</label>
+          <input id="cTrans" class="input" type="number" inputmode="decimal" min="0" placeholder="รวมจากแอปธนาคาร">
+          <div class="tiny muted" id="cTransHint"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="small muted">รายรับรอบนี้หลังนับยอด</div>
+        <div class="money" id="cTotal">฿0</div>
+        <div class="split">
+          <div><div class="tiny muted">เงินสด</div><div style="font-weight:700" id="cCashAfter">฿0</div></div>
+          <div><div class="tiny muted">โอน PromptPay</div><div style="font-weight:700" id="cTransAfter">฿0</div></div>
+        </div>
+      </div>
+      <p class="tiny muted" style="margin:0">ช่องไหนเว้นว่าง แอปจะใช้ยอดที่จดไว้ระหว่างเล่นตามเดิม ใส่ยอดที่นับได้จริงทั้งหมด แอปจะคำนวณส่วนต่างและกระจายเข้าช่วงเวลาที่เล่นให้เอง</p>
+      <button id="btnSaveClose" class="btn hot" type="button">บันทึกและปิดรอบ</button>
+      <button id="btnLaterClose" class="btn text" type="button">ไว้นับทีหลัง</button>
+    </div>
+
+    <!-- เริ่มรอบ -->
+    <div id="pStart" class="col" style="gap:16px" hidden>
+      <div id="unclosedBox" class="col" style="gap:10px" hidden>
+        <div class="note warn"><span>มีรอบที่ยังไม่ได้นับยอด ยอดรวมในสถิติยังไม่ครบ</span></div>
+        <div id="unclosedList" class="col" style="gap:8px"></div>
+      </div>
+      <div class="display" style="font-size:28px">วันนี้เล่นที่ไหน</div>
+      <div class="venues" id="venues" role="group" aria-label="สถานที่เล่น"></div>
+      <input id="venueOther" class="input" type="text" maxlength="60" placeholder="พิมพ์ชื่อสถานที่" hidden>
+      <button id="btnStart" class="btn hot" type="button" disabled>เริ่มรอบเล่น</button>
+      <p class="tiny muted" style="margin:0">พอกดเริ่ม คนดูที่สแกน QR จะขอเพลงได้ทันที และหยุดรับเมื่อคุณกดจบรอบ</p>
+      <a class="btn ghost" href="qr.html" style="display:flex;align-items:center;justify-content:center;text-decoration:none">พิมพ์ป้าย QR ติดกล่องหมวก</a>
+    </div>
+
+    <!-- ระหว่างเล่น -->
+    <div id="pLive" class="col" style="gap:16px" hidden>
+      <div class="row between">
+        <div class="col" style="gap:2px">
+          <div class="row" style="gap:8px"><span class="live-dot"></span><span class="live-label" id="timer">00:00:00</span></div>
+          <div class="small muted" id="liveVenue"></div>
+        </div>
+        <button id="btnEnd" class="btn ghost sm" type="button">จบรอบ</button>
+      </div>
+
+      <div class="card">
+        <div class="col" style="gap:4px">
+          <div class="small muted">รายรับรอบนี้</div>
+          <div class="money" id="total">฿0</div>
+        </div>
+        <div class="split">
+          <div><div class="tiny muted">เงินสด</div><div style="font-weight:700" id="cash">฿0</div></div>
+          <div><div class="tiny muted">โอน PromptPay</div><div style="font-weight:700" id="transfer">฿0</div></div>
+        </div>
+        <div class="seg" role="group" aria-label="ประเภทเงิน">
+          <button id="mCash" type="button" aria-pressed="true">เงินสด</button>
+          <button id="mTransfer" type="button" aria-pressed="false">โอน</button>
+        </div>
+        <div class="chips" id="quick"></div>
+        <div class="row">
+          <input id="addCustom" class="input" type="number" inputmode="decimal" min="0" placeholder="ยอดอื่น" style="height:44px">
+          <button id="btnAddCustom" class="btn sm" type="button">เพิ่ม</button>
+          <button id="btnUndo" class="btn ghost sm" type="button">ย้อน</button>
+        </div>
+      </div>
+
+      <div id="tipBox" class="col" hidden>
+        <div class="row between"><div style="font-weight:700">ทิปรอเช็คยอด</div><span class="tiny muted">เทียบเศษสตางค์กับแจ้งเตือนธนาคาร</span></div>
+        <div id="tipList" class="col" style="gap:10px"></div>
+      </div>
+
+      <div class="col">
+        <div class="row between"><div style="font-weight:700">คิวเพลง <span id="qCount" class="muted"></span></div></div>
+        <div id="queue" class="col" style="gap:10px"></div>
+        <div id="qEmpty" class="card muted small" hidden>ยังไม่มีคำขอ เล่นเพลงของคุณต่อได้เลย</div>
+      </div>
+    </div>
+
+    <!-- สถิติ -->
+    <div id="pStats" class="col" style="gap:16px" hidden>
+      <div class="seg" role="group" aria-label="ช่วงเวลา" style="grid-template-columns:repeat(3,1fr)">
+        <button data-range="7" type="button" aria-pressed="false">7 วัน</button>
+        <button data-range="30" type="button" aria-pressed="true">30 วัน</button>
+        <button data-range="0" type="button" aria-pressed="false">ทั้งหมด</button>
+      </div>
+      <div class="card">
+        <div class="small muted">รายรับรวม</div>
+        <div class="money" id="sTotal">฿0</div>
+        <div class="stat3">
+          <div><span class="tiny muted">จำนวนรอบ</span><b id="sCount">0</b></div>
+          <div><span class="tiny muted">เฉลี่ย/ชม.</span><b id="sHour">฿0</b></div>
+          <div><span class="tiny muted">เฉลี่ย/รอบ</span><b id="sAvg">฿0</b></div>
+        </div>
+      </div>
+      <div class="card"><div style="font-weight:700">รายรับตามสถานที่</div><div id="sVenues" class="col" style="gap:12px"></div></div>
+      <div class="card"><div style="font-weight:700">ช่วงเวลาที่ได้ทิป</div><div class="hours" id="sHours"></div><div class="row between tiny muted" id="sHoursLbl"></div></div>
+      <div class="card"><div style="font-weight:700">เพลงที่ถูกขอบ่อยสุด</div><div id="sSongs"></div></div>
+      <div class="card"><div style="font-weight:700">เพลงที่คนขอ แต่ยังไม่มีในลิสต์</div><div class="tiny muted">ใช้ตัดสินใจว่าจะแกะเพลงไหนเพิ่ม</div><div id="sMissing"></div></div>
+      <div class="card"><div style="font-weight:700">ประวัติรอบเล่น</div><div id="sHistory"></div></div>
+      <button id="btnLogout" class="btn text" type="button">ออกจากระบบ</button>
+    </div>
+  </section>
+
+  <div id="errorBox" class="note warn" hidden></div>
+</main>
+<div id="toast" class="toast" hidden></div>
+<nav class="demobar" aria-label="ตัวอย่างหน้า">
+  <span>ตัวอย่าง</span>
+  <button data-v="login">ล็อกอิน</button><button data-v="start">เริ่มรอบ</button><button data-v="live">ระหว่างเล่น</button><button data-v="close">นับยอด</button><button data-v="stats">สถิติ</button>
+</nav>
+<script type="module" src="perf-demo.js?v=1"></script>
+</body>
+</html>
