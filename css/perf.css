@@ -10,7 +10,7 @@
 /* ไม่มีแอนิเมชันเลย: เรียบ เร็ว กดแล้วเห็นผลทันที */
 *, *::before, *::after { animation: none !important; transition: none !important; }
 body { background: var(--cream); }
-.wrap { padding: 14px 16px 28px; gap: 14px; }
+.wrap { padding: calc(env(safe-area-inset-top, 0px) + 14px) 16px 28px; gap: 14px; }
 
 /* แถบหัว */
 .pbar { display: flex; align-items: center; gap: 12px; background: var(--navy); color: #fff; border-radius: 20px; padding: 10px 14px 10px 10px; }
@@ -92,3 +92,6 @@ body .sheet-grab { background: #D9D2BF; }
 /* ชื่อคนส่ง: ตัวหนา อ่านง่าย */
 .who { font-size: 16px; font-weight: 700; color: var(--ink); }
 .who.none { font-weight: 500; color: var(--ink-2); }
+
+/* ระยะรอยบากบนอยู่ที่ .wrap (ไม่ใช่ตัว html) กันเนื้อหาโดนตัดที่ขอบล่าง */
+:root { padding-top: 0 !important; }
