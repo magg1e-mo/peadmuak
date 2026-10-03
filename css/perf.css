@@ -93,7 +93,6 @@ body .sheet-grab { background: #D9D2BF; }
 .who { font-size: 16px; font-weight: 700; color: var(--ink); }
 .who.none { font-weight: 500; color: var(--ink-2); }
 
-/* รอยบากหน้าจอ iPhone: iOS 26 เบลอขอบบนเอง (ปิดจากเว็บไม่ได้)
-   วิธีแก้: ใต้โซนที่ถูกเบลอให้เป็นสีพื้นเรียบ ไม่มีขอบหัวหน้า และใช้แถบทึบสีเดียวกับพื้นหลังบังเนื้อหาที่เลื่อนผ่าน */
+/* รอยบากหน้าจอ iPhone (แบบ IG): ตอนอยู่บนสุด ใต้ไอคอนเวลา/แบตเป็นพื้นครีมเรียบ ไม่เห็นเบลอ
+   หัว Moshi เว้นระยะให้พ้นโซนที่ iOS 26 เบลอ พอเลื่อนลง เนื้อหาลอดใต้ไอคอนและ iOS เบลอให้ตามปกติ */
 :root { padding-top: 0 !important; }
-body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; height: calc(env(safe-area-inset-top, 0px) * 1.6 + 8px); background: linear-gradient(to bottom, var(--cream) calc(100% - 10px), rgba(251,246,236,0)); z-index: 60; pointer-events: none; }
