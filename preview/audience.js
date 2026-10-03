@@ -52,7 +52,7 @@ function showError(msg) { const e = $('errorBox'); e.textContent = msg; e.hidden
 function renderHeader() {
   $('livePill').className = 'live-pill' + (state.live ? '' : ' off');
   $('liveText').textContent = state.live ? 'กำลังเล่นอยู่ตอนนี้' : 'ยังไม่ได้เล่น';
-  $('venueLine').textContent = STYLE_LINE + (state.venue ? ' ที่ ' + state.venue : '');
+  $('venueLine').textContent = 'Acoustic' + (state.venue ? ' at ' + state.venue : '');
   const q = state.queueCount;
   $('queueLine').hidden = !state.live;
   $('queueText').textContent = q > 0 ? `ตอนนี้มีคิวรออยู่ ${q} เพลง` : 'ตอนนี้ยังไม่มีคิว ขอได้เลยครับ';
