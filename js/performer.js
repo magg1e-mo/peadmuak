@@ -265,9 +265,62 @@ function countSongs(list) {
   if (Object.keys(data).length) setDoc(songsRef(), data, { merge: true }).catch(() => {});
 }
 
+// ---------- กล่องยืนยันแบบแอป (แทน confirm ของเบราว์เซอร์) ----------
+(function injectSheetStyle() {
+  const st = document.createElement('style');
+  st.textContent = `
+  .sheet-bg{position:fixed;inset:0;background:rgba(21,23,28,.45);z-index:50;display:flex;align-items:flex-end;justify-content:center;animation:sheetBg .2s both}
+  .sheet{width:100%;max-width:520px;background:#fff;border-radius:28px 28px 0 0;padding:10px 20px calc(20px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px;box-shadow:0 -12px 40px rgba(0,0,0,.18);animation:sheetUp .28s cubic-bezier(.2,.8,.2,1) both}
+  .sheet-grab{width:40px;height:5px;border-radius:99px;background:#D5D8DE;align-self:center}
+  .sheet-title{font-size:22px;font-weight:700;margin:4px 0 0}
+  .sheet-sub{font-size:15px;color:#5B616E;margin-top:-8px}
+  .sheet-card{background:#F5F6F8;border-radius:18px;padding:14px 16px}
+  .sheet-card .l{font-size:13px;color:#5B616E}
+  .sheet-card .v{font-size:30px;font-weight:700;letter-spacing:-.5px}
+  .sheet-note{font-size:14px;color:#5B616E;line-height:1.5;margin:0}
+  .sheet .btn{margin:0}
+  @keyframes sheetBg{from{opacity:0}to{opacity:1}}
+  @keyframes sheetUp{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+  `;
+  document.head.appendChild(st);
+})();
+
+function askConfirm({ title, sub, big, bigLabel, note, okText = 'ตกลง', cancelText = 'ยกเลิก' }) {
+  return new Promise((resolve) => {
+    const bg = document.createElement('div');
+    bg.className = 'sheet-bg';
+    bg.innerHTML = `<div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(title)}">
+      <div class="sheet-grab"></div>
+      <h2 class="sheet-title">${esc(title)}</h2>
+      ${sub ? `<div class="sheet-sub">${esc(sub)}</div>` : ''}
+      ${big ? `<div class="sheet-card"><div class="l">${esc(bigLabel || '')}</div><div class="v">${esc(big)}</div></div>` : ''}
+      ${note ? `<p class="sheet-note">${esc(note)}</p>` : ''}
+      <button class="btn hot" type="button" data-ok>${esc(okText)}</button>
+      <button class="btn text" type="button" data-cancel>${esc(cancelText)}</button>
+    </div>`;
+    const done = (v) => { document.removeEventListener('keydown', onKey); bg.remove(); resolve(v); };
+    const onKey = (e) => { if (e.key === 'Escape') done(false); };
+    bg.addEventListener('click', (e) => { if (e.target === bg) done(false); });
+    bg.querySelector('[data-ok]').onclick = () => done(true);
+    bg.querySelector('[data-cancel]').onclick = () => done(false);
+    document.addEventListener('keydown', onKey);
+    document.body.appendChild(bg);
+    bg.querySelector('[data-cancel]').focus();
+  });
+}
+
 $('btnEnd').onclick = async () => {
   const s = S.session || {};
-  if (!confirm(`จบรอบเล่นที่ ${s.venue || ''}?\nรายรับรอบนี้ ${fmt((s.cash || 0) + (s.transfer || 0))}\nคนดูจะขอเพลงไม่ได้จนกว่าจะเริ่มรอบใหม่\nจบแล้วจะไปหน้านับยอดปิดรอบต่อทันที`)) return;
+  const ok = await askConfirm({
+    title: 'จบรอบเล่นเลยไหม?',
+    sub: s.venue || '',
+    big: fmt((s.cash || 0) + (s.transfer || 0)),
+    bigLabel: 'รายรับรอบนี้ (ที่จดไว้)',
+    note: 'คนดูจะขอเพลงไม่ได้จนกว่าจะเริ่มรอบใหม่ จบแล้วจะไปหน้านับยอดปิดรอบต่อทันที',
+    okText: 'จบรอบ',
+    cancelText: 'เล่นต่อ'
+  });
+  if (!ok) return;
   const sid = S.sessionId, sRef = doc(db, 'sessions', sid);
   const left = S.requests.filter((r) => r.kind === 'song' && r.status === 'queued');
   const b = writeBatch(db);
