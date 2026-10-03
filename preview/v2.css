@@ -129,8 +129,8 @@ body::before { /* แสงอุ่นๆ มุมบน */
   100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy) + var(--fall))) scale(.9) rotate(var(--rot)); opacity: 0; }
 }
 .p.coin { width: 30px; height: 30px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #FFE9A8, var(--gold) 60%, #C98A12); color: #7A4D00; font-size: 15px; box-shadow: inset 0 -2px 0 rgba(122,77,0,.25), 0 3px 6px rgba(122,77,0,.25); }
-.p.note { color: var(--navy); font-size: 28px; }
-.p.note.g { color: var(--gold); }
+.p.nt { color: var(--navy); font-size: 28px; }
+.p.nt.g { color: var(--gold); }
 .p.heart { color: #E8574B; font-size: 24px; }
 .p.pick { width: 22px; height: 26px; background: var(--gold); border-radius: 50% 50% 50% 50% / 38% 38% 62% 62%; box-shadow: inset -3px -3px 0 rgba(122,77,0,.2); }
 .p.mini { width: 36px; height: 30px; }

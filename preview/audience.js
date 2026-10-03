@@ -184,8 +184,8 @@ function celebrate(big) {
   const m = $('mascot').getBoundingClientRect();
   const ox = m.left + m.width / 2, oy = m.top + m.height * .35;
   const kinds = big
-    ? ['coin', 'coin', 'coin', 'coin', 'note', 'note', 'note g', 'heart', 'heart', 'pick', 'mini', 'spark']
-    : ['note', 'note g', 'heart', 'spark'];
+    ? ['coin', 'coin', 'coin', 'coin', 'nt', 'nt', 'nt g', 'heart', 'heart', 'pick', 'mini', 'spark']
+    : ['nt', 'nt g', 'heart', 'spark'];
   const n = big ? 34 : 12;
   for (let i = 0; i < n; i++) {
     const kind = kinds[i % kinds.length];
@@ -201,7 +201,7 @@ function celebrate(big) {
     p.style.setProperty('--dur', 1.5 + Math.random() * 1.1 + 's');
     p.style.setProperty('--delay', 0.25 + i * 0.035 + 's');
     if (kind === 'coin') p.textContent = '฿';
-    else if (kind.startsWith('note')) p.textContent = ['♪', '♫', '♬'][i % 3];
+    else if (kind.startsWith('nt')) p.textContent = ['♪', '♫', '♬'][i % 3];
     else if (kind === 'heart') p.textContent = '♥';
     else if (kind === 'spark') p.textContent = '✦';
     else if (kind === 'mini') p.innerHTML = '<svg width="36" height="30" style="--cap:#142652;--seam:#fff"><use href="#cap"/></svg>';
