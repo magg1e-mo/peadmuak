@@ -20,9 +20,9 @@ const coordOf = (name) => { const k = Object.keys(COORDS).find((n) => String(nam
 
 /* ---------- ไอคอน 3 แบบ ---------- */
 const ICONS = {
-  good: '<svg viewBox="0 0 64 64" width="56" height="56" fill="none" stroke-linecap="round"><circle cx="32" cy="32" r="12" fill="#FFD24A"/><g stroke="#FFE27A" stroke-width="4"><path d="M32 8v6M32 50v6M8 32h6M50 32h6M15 15l4.2 4.2M44.8 44.8L49 49M15 49l4.2-4.2M44.8 19.2L49 15"/></g></svg>',
-  cloud: '<svg viewBox="0 0 64 64" width="56" height="56" fill="none" stroke-linecap="round"><path d="M16 46h28a10 10 0 0 0 1.6-19.9A14 14 0 0 0 18.4 29 9 9 0 0 0 16 46z" fill="#FFFFFF"/><path d="M42 20a8 8 0 0 1 8 5" stroke="#FFFFFF" stroke-opacity=".6" stroke-width="3.5"/></svg>',
-  rain: '<svg viewBox="0 0 64 64" width="56" height="56" fill="none" stroke-linecap="round"><path d="M18 40h26a10 10 0 0 0 1.6-19.9A14 14 0 0 0 18.4 23 9 9 0 0 0 18 40z" fill="#E3E9F2"/><g stroke="#8FD0FF" stroke-width="4"><path d="M23 47l-3 8M33 47l-3 8M43 47l-3 8"/></g></svg>',
+  good: '<svg viewBox="0 0 64 64" width="56" height="56" fill="none" stroke-linecap="round"><g stroke="#FFE27A" stroke-width="4"><path class="sn-r" pathLength="1" style="--i:0" d="M32 14V8"/><path class="sn-r" pathLength="1" style="--i:1" d="M32 50v6"/><path class="sn-r" pathLength="1" style="--i:2" d="M14 32H8"/><path class="sn-r" pathLength="1" style="--i:3" d="M50 32h6"/><path class="sn-r" pathLength="1" style="--i:4" d="M19.2 19.2L15 15"/><path class="sn-r" pathLength="1" style="--i:5" d="M44.8 44.8L49 49"/><path class="sn-r" pathLength="1" style="--i:6" d="M19.2 44.8L15 49"/><path class="sn-r" pathLength="1" style="--i:7" d="M44.8 19.2L49 15"/></g><circle class="sn-core" cx="32" cy="32" r="12" fill="#FFD24A"/></svg>',
+  cloud: '<svg viewBox="0 0 64 64" width="56" height="56" fill="none" stroke-linecap="round"><g class="cl-sun"><path stroke="#FFE27A" stroke-width="3" d="M40 15v-4M40 41v4M27 28h-4M53 28h4M49.2 18.8L52 16M30.8 18.8L28 16M49.2 37.2L52 40M30.8 37.2L28 40"/><circle cx="40" cy="28" r="9" fill="#FFD24A"/></g><g class="cl-body"><path d="M16 46h28a10 10 0 0 0 1.6-19.9A14 14 0 0 0 18.4 29 9 9 0 0 0 16 46z" fill="#FFFFFF"/><path d="M42 20a8 8 0 0 1 8 5" stroke="#FFFFFF" stroke-opacity=".6" stroke-width="3.5"/></g></svg>',
+  rain: '<svg viewBox="0 0 64 64" width="56" height="56" fill="none" stroke-linecap="round"><g stroke="#8FD0FF" stroke-width="3.5"><path class="rn-s" style="--i:0" d="M20 38l-2 6"/><path class="rn-s" style="--i:1" d="M25 38l-2 6"/><path class="rn-s" style="--i:2" d="M30 38l-2 6"/><path class="rn-s" style="--i:3" d="M35 38l-2 6"/><path class="rn-s" style="--i:4" d="M40 38l-2 6"/><path class="rn-s" style="--i:5" d="M44 38l-2 6"/></g><path class="rn-c" d="M18 40h26a10 10 0 0 0 1.6-19.9A14 14 0 0 0 18.4 23 9 9 0 0 0 18 40z" fill="#E3E9F2"/><g class="rn-f" stroke="#8FD0FF" stroke-width="4"><path d="M23 47l-3 8M33 47l-3 8M43 47l-3 8"/></g></svg>',
 };
 /* สีพื้นไอคอนเหมือนสีท้องฟ้า: ฟ้าใส / ฟ้าหม่นครึ้ม / เทาเข้มฝน */
 const SKY = {
@@ -88,6 +88,23 @@ css.textContent = `
 @keyframes wxOut{from{background-color:rgba(8,14,32,.78)}to{background-color:rgba(8,14,32,0)}}
 @keyframes wxOutC{from{opacity:1}to{opacity:0}}
 @keyframes wxOutS{from{transform:none}to{transform:translateY(10px) scale(.96)}}
+.wx-ico{overflow:hidden}.wx-ico svg{overflow:visible}
+.sn-core,.cl-sun,.cl-body,.rn-c{transform-box:fill-box;transform-origin:center}
+.cl-sun{opacity:0}.rn-s{opacity:0}
+@keyframes snCore{0%{transform:scale(0)}60%{transform:scale(1.14)}100%{transform:scale(1)}}
+@keyframes snRay{0%{stroke-dasharray:1 1;stroke-dashoffset:1;opacity:0}12%{opacity:1}100%{stroke-dasharray:1 1;stroke-dashoffset:0;opacity:1}}
+@keyframes clSun{0%{opacity:0;transform:scale(.4)}22%{opacity:1;transform:scale(1.06)}32%{opacity:1;transform:scale(1)}72%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.92)}}
+@keyframes clCloud{0%{opacity:0;transform:translateX(-30px)}100%{opacity:1;transform:none}}
+@keyframes rnCloud{0%{opacity:0;transform:translateY(-8px) scale(.85)}100%{opacity:1;transform:none}}
+@keyframes rnDrop{0%{opacity:0;transform:translateY(0)}18%{opacity:1}75%{opacity:1}100%{opacity:0;transform:translateY(34px)}}
+@keyframes rnFinal{from{opacity:0}to{opacity:1}}
+.wx-ico .sn-core{animation:snCore .6s cubic-bezier(.2,.9,.3,1.2) .35s both !important}
+.wx-ico .sn-r{animation:snRay .45s ease-out calc(.85s + var(--i)*.06s) both !important}
+.wx-ico .cl-sun{animation:clSun 2.3s ease-in-out .3s both !important}
+.wx-ico .cl-body{animation:clCloud 1s cubic-bezier(.3,.7,.2,1) 1.05s both !important}
+.wx-ico .rn-c{animation:rnCloud .5s cubic-bezier(.2,.9,.3,1.1) .3s both !important}
+.wx-ico .rn-s{animation:rnDrop .7s linear calc(.7s + var(--i)*.11s) 3 both !important}
+.wx-ico .rn-f{animation:rnFinal .45s ease-out 3.3s both !important}
 .wx-bg{animation:wxFade .3s ease both !important}
 .wx-sheet{animation:wxPop .6s cubic-bezier(.2,.85,.25,1) both !important}
 .wx-ico{animation:wxIcon .65s cubic-bezier(.2,.9,.3,1.1) .1s both !important}
