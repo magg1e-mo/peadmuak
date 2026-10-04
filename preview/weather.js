@@ -80,13 +80,32 @@ css.textContent = `
 .wx-row span{position:relative;font-size:13px;color:#DCE3F5}
 .wx-tip{font-size:15px;line-height:1.6;color:#E8ECF7;margin:8px 0 12px}
 .wx-hint{font-size:13px;color:#8D98B8}
+/* แอนิเมชันเข้า/ออก (ทับกฎ animation:none ของหน้าคนเล่นด้วย !important เฉพาะป๊อปอัปนี้) */
+@keyframes wxFade{from{opacity:0}to{opacity:1}}
+@keyframes wxPop{0%{opacity:0;transform:translateY(28px) scale(.9)}55%{opacity:1;transform:translateY(-5px) scale(1.025)}100%{opacity:1;transform:none}}
+@keyframes wxIcon{0%{opacity:0;transform:scale(.55) rotate(-8deg)}60%{opacity:1;transform:scale(1.1) rotate(2deg)}100%{opacity:1;transform:none}}
+@keyframes wxUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes wxOut{from{opacity:1}to{opacity:0}}
+@keyframes wxOutS{from{opacity:1;transform:none}to{opacity:0;transform:translateY(10px) scale(.96)}}
+.wx-bg{animation:wxFade .3s ease both !important}
+.wx-sheet{animation:wxPop .6s cubic-bezier(.2,.85,.25,1) both !important}
+.wx-ico{animation:wxIcon .65s cubic-bezier(.2,.9,.3,1.1) .1s both !important}
+.wx-title{animation:wxUp .5s ease-out .22s both !important}
+.wx-venue{animation:wxUp .5s ease-out .27s both !important}
+.wx-row>div:nth-child(1){animation:wxUp .5s ease-out .32s both !important}
+.wx-row>div:nth-child(2){animation:wxUp .5s ease-out .39s both !important}
+.wx-tip{animation:wxUp .5s ease-out .46s both !important}
+.wx-hint{animation:wxUp .5s ease-out .54s both !important}
+.wx-bg.out{animation:wxOut .22s ease forwards !important}
+.wx-bg.out .wx-sheet{animation:wxOutS .22s ease forwards !important}
+@media (prefers-reduced-motion:reduce){.wx-bg,.wx-bg *{animation:none !important}}
 `;
 document.head.appendChild(css);
 
 let chip = null, shown = false, curName = '';
 
 function openSheet(name, w) {
-  closeSheet();
+  closeSheet(true);
   const t = TXT[w.kind];
   const el = document.createElement('div'); el.className = 'wx-bg'; el.id = 'wxBg';
   el.innerHTML = `<div class="wx-sheet" role="dialog" aria-label="สภาพอากาศ">
@@ -99,7 +118,11 @@ function openSheet(name, w) {
   el.addEventListener('click', (e) => { closeSheet(); });
   document.body.appendChild(el);
 }
-function closeSheet() { const e = $('wxBg'); if (e) e.remove(); }
+function closeSheet(instant) {
+  const e = $('wxBg'); if (!e) return;
+  if (instant || e.classList.contains('out')) { if (instant) e.remove(); return; }
+  e.classList.add('out'); setTimeout(() => e.remove(), 230);
+}
 
 function paintChip(name, w) {
   if (!chip) return;
