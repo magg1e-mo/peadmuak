@@ -62,19 +62,18 @@ css.textContent = `
 .wx-chip .wi svg{width:26px;height:26px}
 .wx-chip .wm{flex:1;line-height:1.25}
 .wx-chip .wm small{display:block;font-weight:500;color:var(--ink-2,#566079);font-size:13px}
-.wx-bg{position:fixed;inset:0;z-index:60;background:rgba(20,33,61,.5);display:flex;align-items:center;justify-content:center;padding:24px}
-.wx-sheet{width:100%;max-width:340px;background:#fff;border-radius:30px;padding:26px 22px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
-.wx-grab{width:40px;height:5px;border-radius:99px;background:#D9D2BF;margin-bottom:6px}
-.wx-ico{width:104px;height:104px;border-radius:30px;background:var(--navy,#142652);display:grid;place-items:center}
-.wx-ico svg{width:68px;height:68px}
-.wx-venue{font-size:14px;color:var(--ink-2,#566079)}
-.wx-title{font-family:var(--display,inherit);font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--ink,#14213D);line-height:1.15}
-.wx-row{display:flex;gap:10px;width:100%;margin-top:4px}
-.wx-row>div{flex:1;background:var(--cream,#FBF6EC);border-radius:16px;padding:10px 12px}
-.wx-row b{display:block;font-size:24px;color:var(--navy,#142652);letter-spacing:-.02em}
-.wx-row span{font-size:13px;color:var(--ink-2,#566079)}
-.wx-tip{font-size:15px;color:var(--ink,#14213D);margin:4px 0 6px}
-.wx-hint{font-size:13px;color:var(--ink-3,#8D93A5)}
+.wx-bg{position:fixed;inset:0;z-index:60;background:rgba(8,14,32,.86);display:flex;align-items:center;justify-content:center;padding:24px}
+.wx-sheet{width:100%;max-width:340px;padding:0;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;color:#fff}
+.wx-ico{width:112px;height:112px;border-radius:32px;background:#24407F;display:grid;place-items:center}
+.wx-ico svg{width:72px;height:72px}
+.wx-venue{font-size:14px;color:#B9C4E0}
+.wx-title{font-family:var(--display,inherit);font-size:30px;font-weight:700;letter-spacing:-.02em;color:#fff;line-height:1.15}
+.wx-row{display:flex;gap:10px;width:100%;margin-top:6px}
+.wx-row>div{flex:1;background:rgba(255,255,255,.1);border-radius:18px;padding:12px}
+.wx-row b{display:block;font-size:26px;color:#fff;letter-spacing:-.02em}
+.wx-row span{font-size:13px;color:#B9C4E0}
+.wx-tip{font-size:15px;color:#E8ECF7;margin:6px 0 10px}
+.wx-hint{font-size:13px;color:#8D98B8}
 `;
 document.head.appendChild(css);
 
