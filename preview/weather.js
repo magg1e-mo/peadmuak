@@ -75,8 +75,7 @@ css.textContent = `
 .wx-venue{font-size:14px;color:#B9C4E0}
 .wx-title{font-family:var(--display,inherit);font-size:30px;font-weight:700;letter-spacing:-.02em;color:#fff;line-height:1.15}
 .wx-row{display:flex;gap:10px;width:100%;margin-top:6px}
-.wx-row>div{flex:1;position:relative;overflow:hidden;background:linear-gradient(145deg,rgba(255,255,255,.28) 0%,rgba(255,255,255,.08) 55%,rgba(255,255,255,.16) 100%);-webkit-backdrop-filter:blur(18px) saturate(170%);backdrop-filter:blur(18px) saturate(170%);border:1px solid rgba(255,255,255,.35);border-radius:22px;padding:12px;box-shadow:inset 0 1.5px 0 rgba(255,255,255,.55),inset 0 -1px 0 rgba(255,255,255,.12),0 8px 24px rgba(0,0,0,.28)}
-.wx-row>div::before{content:'';position:absolute;left:-20%;top:-60%;width:140%;height:90%;background:radial-gradient(ellipse at 30% 0%,rgba(255,255,255,.35),rgba(255,255,255,0) 65%);pointer-events:none}
+.wx-row>div{flex:1;position:relative;background:rgba(255,255,255,.14);-webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%);border:1px solid rgba(255,255,255,.22);border-radius:22px;padding:12px}
 .wx-row b{position:relative;display:block;font-size:26px;color:#fff;letter-spacing:-.02em}
 .wx-row span{position:relative;font-size:13px;color:#DCE3F5}
 .wx-tip{font-size:15px;line-height:1.6;color:#E8ECF7;margin:8px 0 12px}
