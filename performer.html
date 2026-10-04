@@ -14,7 +14,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/app.css">
-<link rel="stylesheet" href="css/perf.css?v=10">
+<link rel="stylesheet" href="css/perf.css?v=11">
 <script>
 /* กันซูมแบบแอปจริง: iOS ไม่สนใจ user-scalable=no จึงดักท่า pinch เอง (double-tap กันด้วย touch-action ใน CSS เพื่อไม่ให้กดรัวๆ พลาด) */
 ['gesturestart','gesturechange','gestureend'].forEach(function(e){document.addEventListener(e,function(ev){ev.preventDefault();});});
@@ -32,6 +32,7 @@
     <div class="pbar-mark" aria-hidden="true"><svg width="30" height="25"><use href="#cap"/></svg></div>
     <div class="pbar-name"><b>Moshi</b><span>หน้าคนเล่น</span></div>
     <span id="pbarState" class="pbar-state">ยังไม่ได้เล่น</span>
+    <button id="btnStatsIcon" class="pbar-stats" type="button" aria-label="สถิติ"><svg class="ic-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V11M12 20V4M19 20v-6"/></svg><svg class="ic-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg><span class="dot"></span></button>
   </header>
 
 
@@ -83,10 +84,6 @@
 
     <!-- เริ่มรอบ -->
     <div id="pStart" class="col" style="gap:16px" hidden>
-      <div id="unclosedBox" class="col" style="gap:10px" hidden>
-        <div class="note warn"><span>มีรอบที่ยังไม่ได้นับยอด ยอดรวมในสถิติยังไม่ครบ</span></div>
-        <div id="unclosedList" class="col" style="gap:8px"></div>
-      </div>
       <div class="display" style="font-size:28px">วันนี้เล่นที่ไหน</div>
       <div class="venues" id="venues" role="group" aria-label="สถานที่เล่น"></div>
       <input id="venueOther" class="input" type="text" maxlength="60" placeholder="พิมพ์ชื่อสถานที่" hidden>
@@ -140,6 +137,10 @@
 
     <!-- สถิติ -->
     <div id="pStats" class="col" style="gap:16px" hidden>
+    <div id="unclosedBox" class="col" style="gap:10px" hidden>
+        <div class="note warn"><span>มีรอบที่ยังไม่ได้นับยอด ยอดรวมในสถิติยังไม่ครบ กดนับยอดได้ที่นี่</span></div>
+        <div id="unclosedList" class="col" style="gap:8px"></div>
+      </div>
       <div class="seg" role="group" aria-label="ช่วงเวลา" style="grid-template-columns:repeat(3,1fr)">
         <button data-range="7" type="button" aria-pressed="false">7 วัน</button>
         <button data-range="30" type="button" aria-pressed="true">30 วัน</button>
@@ -170,6 +171,21 @@
 /* แถบหัว: ซ่อนตอนยังไม่ล็อกอิน */
 (function(){var bar=document.querySelector('.pbar'),lg=document.getElementById('vLogin');function s(){bar.hidden=!lg.hidden;}new MutationObserver(s).observe(lg,{attributes:true,attributeFilter:['hidden']});s();})();
 </script>
+<script>
+/* ไอคอนสถิติที่หัวแอป + จุดแดงเมื่อมีรอบค้างนับยอด (ไม่แตะโค้ดหลัก: แค่สั่งคลิกแท็บเดิมที่ซ่อนอยู่) */
+(function(){
+  var $=function(i){return document.getElementById(i);};
+  var ib=$('btnStatsIcon'),ts=$('tabStats'),tl=$('tabLive'),ul=$('unclosedList');
+  function sync(){var st=ts.getAttribute('aria-selected')==='true';ib.classList.toggle('back',st);ib.setAttribute('aria-label',st?'กลับหน้ารอบเล่น':'สถิติ');}
+  ib.onclick=function(){(ts.getAttribute('aria-selected')==='true'?tl:ts).click();};
+  new MutationObserver(sync).observe(ts,{attributes:true,attributeFilter:['aria-selected']});sync();
+  function dot(){ib.classList.toggle('has-dot',ul.children.length>0);}
+  new MutationObserver(dot).observe(ul,{childList:true});dot();
+  /* กดนับยอดจากหน้าสถิติ: สลับกลับแท็บรอบเล่นก่อน เพื่อให้หน้านับยอดแสดง */
+  document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('button[data-act="closeround"]');if(b&&ts.getAttribute('aria-selected')==='true')tl.click();},true);
+})();
+</script>
 <script type="module" src="js/performer.js?v=3"></script>
+<script type="module" src="js/weather.js?v=1"></script>
 </body>
 </html>
