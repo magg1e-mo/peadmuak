@@ -96,14 +96,15 @@ css.textContent = `
 @keyframes clSun{0%{opacity:0;transform:scale(.4)}22%{opacity:1;transform:scale(1.06)}32%{opacity:1;transform:scale(1)}72%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.92)}}
 @keyframes clCloud{0%{opacity:0;transform:translateX(-30px)}100%{opacity:1;transform:none}}
 @keyframes rnCloud{0%{opacity:0;transform:translateY(-8px) scale(.85)}100%{opacity:1;transform:none}}
-@keyframes rnDrop{0%{opacity:0;transform:translateY(-10px)}20%{opacity:1}75%{opacity:1}100%{opacity:0;transform:translateY(30px)}}
-@keyframes rnSettle{0%{opacity:0;transform:translateY(-5px)}100%{opacity:1;transform:none}}
+@keyframes rnFall{0%{opacity:0;transform:translateY(-14px)}25%{opacity:1}70%{opacity:1;transform:translateY(3px)}100%{opacity:1;transform:none}}
 .wx-ico .sn-core{animation:snCore .6s cubic-bezier(.2,.9,.3,1.2) .35s both !important}
 .wx-ico .sn-r{animation:snRay .45s ease-out calc(.85s + var(--i)*.06s) both !important}
 .wx-ico .cl-sun{animation:clSun 2.3s ease-in-out .3s both !important}
 .wx-ico .cl-body{animation:clCloud 1s cubic-bezier(.3,.7,.2,1) 1.05s both !important}
 .wx-ico .rn-c{animation:rnCloud .5s cubic-bezier(.2,.9,.3,1.1) .3s both !important}
-.wx-ico .rn-s{animation:rnDrop .8s linear calc(.7s + var(--i)*.15s) 3 both !important,rnSettle .45s ease-out calc(3.1s + var(--i)*.15s) both !important}
+.wx-ico .rn-s{animation:rnFall .9s ease-out .55s both !important}
+.wx-ico .rn-s:nth-child(2){animation-delay:.7s !important}
+.wx-ico .rn-s:nth-child(3){animation-delay:.85s !important}
 .wx-bg{animation:wxFade .3s ease both !important}
 .wx-sheet{animation:wxPop .6s cubic-bezier(.2,.85,.25,1) both !important}
 .wx-ico{animation:wxIcon .65s cubic-bezier(.2,.9,.3,1.1) .1s both !important}
