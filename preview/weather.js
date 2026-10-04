@@ -62,8 +62,8 @@ css.textContent = `
 .wx-chip .wi svg{width:26px;height:26px}
 .wx-chip .wm{flex:1;line-height:1.25}
 .wx-chip .wm small{display:block;font-weight:500;color:var(--ink-2,#566079);font-size:13px}
-.wx-bg{position:fixed;inset:0;z-index:60;background:rgba(20,33,61,.5);display:flex;align-items:flex-end;justify-content:center}
-.wx-sheet{width:100%;max-width:440px;background:#fff;border-radius:26px 26px 0 0;padding:14px 22px calc(22px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.wx-bg{position:fixed;inset:0;z-index:60;background:rgba(20,33,61,.5);display:flex;align-items:center;justify-content:center;padding:24px}
+.wx-sheet{width:100%;max-width:340px;background:#fff;border-radius:30px;padding:26px 22px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
 .wx-grab{width:40px;height:5px;border-radius:99px;background:#D9D2BF;margin-bottom:6px}
 .wx-ico{width:104px;height:104px;border-radius:30px;background:var(--navy,#142652);display:grid;place-items:center}
 .wx-ico svg{width:68px;height:68px}
@@ -74,7 +74,7 @@ css.textContent = `
 .wx-row b{display:block;font-size:24px;color:var(--navy,#142652);letter-spacing:-.02em}
 .wx-row span{font-size:13px;color:var(--ink-2,#566079)}
 .wx-tip{font-size:15px;color:var(--ink,#14213D);margin:4px 0 6px}
-.wx-ok{width:100%;height:56px;border:none;border-radius:18px;background:var(--navy,#142652);color:#fff;font-size:17px;font-weight:700}
+.wx-hint{font-size:13px;color:var(--ink-3,#8D93A5)}
 `;
 document.head.appendChild(css);
 
@@ -84,14 +84,14 @@ function openSheet(name, w) {
   closeSheet();
   const t = TXT[w.kind];
   const el = document.createElement('div'); el.className = 'wx-bg'; el.id = 'wxBg';
-  el.innerHTML = `<div class="wx-sheet" role="dialog" aria-label="สภาพอากาศ"><div class="wx-grab"></div>
+  el.innerHTML = `<div class="wx-sheet" role="dialog" aria-label="สภาพอากาศ">
     <div class="wx-ico">${ICONS[w.kind]}</div>
     <div class="wx-title">${t.title}</div>
     <div class="wx-venue">${name ? 'ที่ ' + name.replace(/</g, '&lt;') : ''}</div>
     <div class="wx-row"><div><b>${w.temp}°</b><span>อุณหภูมิตอนนี้</span></div><div><b>${w.prob}%</b><span>โอกาสฝนใน 6 ชม.</span></div></div>
     <div class="wx-tip">${t.tip}</div>
-    <button class="wx-ok" type="button">รับทราบ</button></div>`;
-  el.addEventListener('click', (e) => { if (e.target === el || e.target.closest('.wx-ok')) closeSheet(); });
+    <div class="wx-hint">แตะที่ว่างเพื่อปิด</div></div>`;
+  el.addEventListener('click', (e) => { closeSheet(); });
   document.body.appendChild(el);
 }
 function closeSheet() { const e = $('wxBg'); if (e) e.remove(); }
