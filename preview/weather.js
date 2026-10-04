@@ -20,9 +20,15 @@ const coordOf = (name) => { const k = Object.keys(COORDS).find((n) => String(nam
 
 /* ---------- ไอคอน 3 แบบ ---------- */
 const ICONS = {
-  good: '<svg viewBox="0 0 64 64" width="56" height="56" fill="none" stroke-linecap="round"><circle cx="32" cy="32" r="12" fill="#F2B84B"/><g stroke="#F2B84B" stroke-width="4"><path d="M32 8v6M32 50v6M8 32h6M50 32h6M15 15l4.2 4.2M44.8 44.8L49 49M15 49l4.2-4.2M44.8 19.2L49 15"/></g></svg>',
-  cloud: '<svg viewBox="0 0 64 64" width="56" height="56" fill="none" stroke-linecap="round"><path d="M18 46h26a10 10 0 0 0 1.6-19.9A14 14 0 0 0 18.4 29 9 9 0 0 0 18 46z" fill="#DCE3F5"/><path d="M40 20a8 8 0 0 1 9 5" stroke="#F2B84B" stroke-width="3.5"/></svg>',
-  rain: '<svg viewBox="0 0 64 64" width="56" height="56" fill="none" stroke-linecap="round"><path d="M18 40h26a10 10 0 0 0 1.6-19.9A14 14 0 0 0 18.4 23 9 9 0 0 0 18 40z" fill="#B9C4E0"/><g stroke="#F2B84B" stroke-width="4"><path d="M23 47l-3 8M33 47l-3 8M43 47l-3 8"/></g></svg>',
+  good: '<svg viewBox="0 0 64 64" width="56" height="56" fill="none" stroke-linecap="round"><circle cx="32" cy="32" r="12" fill="#FFD24A"/><g stroke="#FFE27A" stroke-width="4"><path d="M32 8v6M32 50v6M8 32h6M50 32h6M15 15l4.2 4.2M44.8 44.8L49 49M15 49l4.2-4.2M44.8 19.2L49 15"/></g></svg>',
+  cloud: '<svg viewBox="0 0 64 64" width="56" height="56" fill="none" stroke-linecap="round"><path d="M16 46h28a10 10 0 0 0 1.6-19.9A14 14 0 0 0 18.4 29 9 9 0 0 0 16 46z" fill="#FFFFFF"/><path d="M42 20a8 8 0 0 1 8 5" stroke="#FFFFFF" stroke-opacity=".6" stroke-width="3.5"/></svg>',
+  rain: '<svg viewBox="0 0 64 64" width="56" height="56" fill="none" stroke-linecap="round"><path d="M18 40h26a10 10 0 0 0 1.6-19.9A14 14 0 0 0 18.4 23 9 9 0 0 0 18 40z" fill="#E3E9F2"/><g stroke="#8FD0FF" stroke-width="4"><path d="M23 47l-3 8M33 47l-3 8M43 47l-3 8"/></g></svg>',
+};
+/* สีพื้นไอคอนเหมือนสีท้องฟ้า: ฟ้าใส / ฟ้าหม่นครึ้ม / เทาเข้มฝน */
+const SKY = {
+  good:  'linear-gradient(160deg,#2E8FE8 0%,#8CCBFF 100%)',
+  cloud: 'linear-gradient(160deg,#7C8CA3 0%,#BCC6D4 100%)',
+  rain:  'linear-gradient(160deg,#2F3A52 0%,#5C6B88 100%)',
 };
 const TXT = {
   good:  { title: 'อากาศดี',  tip: 'เล่นได้สบายเลยครับ ขอให้วันนี้เสียงเพราะ ทิปเยอะ' },
@@ -64,7 +70,7 @@ css.textContent = `
 .wx-chip .wm small{display:block;font-weight:500;color:var(--ink-2,#566079);font-size:13px}
 .wx-bg{position:fixed;inset:0;z-index:60;background:rgba(8,14,32,.86);display:flex;align-items:center;justify-content:center;padding:24px}
 .wx-sheet{width:100%;max-width:340px;padding:0;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;color:#fff}
-.wx-ico{width:112px;height:112px;border-radius:32px;background:#24407F;display:grid;place-items:center}
+.wx-ico{width:112px;height:112px;border-radius:32px;box-shadow:0 8px 30px rgba(0,0,0,.35);display:grid;place-items:center}
 .wx-ico svg{width:72px;height:72px}
 .wx-venue{font-size:14px;color:#B9C4E0}
 .wx-title{font-family:var(--display,inherit);font-size:30px;font-weight:700;letter-spacing:-.02em;color:#fff;line-height:1.15}
@@ -84,7 +90,7 @@ function openSheet(name, w) {
   const t = TXT[w.kind];
   const el = document.createElement('div'); el.className = 'wx-bg'; el.id = 'wxBg';
   el.innerHTML = `<div class="wx-sheet" role="dialog" aria-label="สภาพอากาศ">
-    <div class="wx-ico">${ICONS[w.kind]}</div>
+    <div class="wx-ico" style="background:${SKY[w.kind]}">${ICONS[w.kind]}</div>
     <div class="wx-title">${t.title}</div>
     <div class="wx-venue">${name ? 'ที่ ' + name.replace(/</g, '&lt;') : ''}</div>
     <div class="wx-row"><div><b>${w.temp}°</b><span>อุณหภูมิตอนนี้</span></div><div><b>${w.prob}%</b><span>โอกาสฝนใน 6 ชม.</span></div></div>
@@ -99,7 +105,7 @@ function paintChip(name, w) {
   if (!chip) return;
   if (!w) { chip.hidden = true; return; }
   chip.hidden = false;
-  chip.innerHTML = `<span class="wi">${ICONS[w.kind]}</span><span class="wm">${TXT[w.kind].title} · ${w.temp}°<small>${name ? name.replace(/</g, '&lt;') : ''} · โอกาสฝน ${w.prob}%</small></span>`;
+  chip.innerHTML = `<span class="wi" style="background:${SKY[w.kind]}">${ICONS[w.kind]}</span><span class="wm">${TXT[w.kind].title} · ${w.temp}°<small>${name ? name.replace(/</g, '&lt;') : ''} · โอกาสฝน ${w.prob}%</small></span>`;
   chip.onclick = () => openSheet(name, w);
 }
 
