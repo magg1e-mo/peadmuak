@@ -13,7 +13,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/app.css">
-<link rel="stylesheet" href="perf.css?v=1">
+<link rel="stylesheet" href="perf.css?v=2">
 <script>
 /* กันซูมแบบแอปจริง: iOS ไม่สนใจ user-scalable=no จึงดักท่า pinch เอง (double-tap กันด้วย touch-action ใน CSS เพื่อไม่ให้กดรัวๆ พลาด) */
 ['gesturestart','gesturechange','gestureend'].forEach(function(e){document.addEventListener(e,function(ev){ev.preventDefault();});});
@@ -31,6 +31,7 @@
     <div class="pbar-mark" aria-hidden="true"><svg width="30" height="25"><use href="#cap"/></svg></div>
     <div class="pbar-name"><b>Moshi</b><span>หน้าคนเล่น</span></div>
     <span id="pbarState" class="pbar-state">ยังไม่ได้เล่น</span>
+    <button id="btnStatsIcon" class="pbar-stats" type="button" aria-label="สถิติ"><svg class="ic-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V11M12 20V4M19 20v-6"/></svg><svg class="ic-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
   </header>
 
   <!-- ล็อกอิน -->
@@ -81,11 +82,11 @@
 
     <!-- เริ่มรอบ -->
     <div id="pStart" class="col" style="gap:16px" hidden>
-      <div id="unclosedBox" class="col" style="gap:10px" hidden>
-        <div class="note warn"><span>มีรอบที่ยังไม่ได้นับยอด ยอดรวมในสถิติยังไม่ครบ</span></div>
-        <div id="unclosedList" class="col" style="gap:8px"></div>
-      </div>
       <div class="display" style="font-size:28px">วันนี้เล่นที่ไหน</div>
+      <div id="unclosedBox" class="col" style="gap:10px" hidden>
+        <button id="ucToggle" class="uc-chip" type="button" aria-expanded="false"><i></i><span id="ucText">ค้างนับยอด</span><span class="uc-arrow">›</span></button>
+        <div id="unclosedList" class="col" style="gap:8px" hidden></div>
+      </div>
       <div class="venues" id="venues" role="group" aria-label="สถานที่เล่น"></div>
       <input id="venueOther" class="input" type="text" maxlength="60" placeholder="พิมพ์ชื่อสถานที่" hidden>
       <button id="btnStart" class="btn hot" type="button" disabled>เริ่มรอบเล่น</button>
@@ -168,6 +169,20 @@
   <span>ตัวอย่าง</span>
   <button data-v="login">ล็อกอิน</button><button data-v="start">เริ่มรอบ</button><button data-v="live">ระหว่างเล่น</button><button data-v="close">นับยอด</button><button data-v="stats">สถิติ</button>
 </nav>
+<script>
+/* ไอคอนสถิติที่หัวแอป + ป้ายรอบค้างนับยอด (ไม่แตะโค้ดหลัก: แค่สั่งคลิกแท็บเดิมที่ซ่อนอยู่) */
+(function(){
+  var $=function(i){return document.getElementById(i);};
+  var ib=$('btnStatsIcon'),ts=$('tabStats'),tl=$('tabLive');
+  function sync(){var st=ts.getAttribute('aria-selected')==='true';ib.classList.toggle('back',st);ib.setAttribute('aria-label',st?'กลับหน้ารอบเล่น':'สถิติ');}
+  ib.onclick=function(){(ts.getAttribute('aria-selected')==='true'?tl:ts).click();};
+  new MutationObserver(sync).observe(ts,{attributes:true,attributeFilter:['aria-selected']});sync();
+  var ul=$('unclosedList'),tg=$('ucToggle'),tx=$('ucText');
+  tg.onclick=function(){ul.hidden=!ul.hidden;tg.setAttribute('aria-expanded',String(!ul.hidden));};
+  function cnt(){var n=ul.children.length;tx.textContent='ค้างนับยอด '+n+' รอบ';}
+  new MutationObserver(cnt).observe(ul,{childList:true});cnt();
+})();
+</script>
 <script type="module" src="perf-demo.js?v=1"></script>
 <style>.wxbar{position:fixed;left:0;right:0;bottom:56px;z-index:40;display:flex;gap:6px;align-items:center;padding:8px 10px;background:rgba(20,33,61,.94)}.wxbar span{color:#B9C4E0;font-size:12px}.wxbar button{flex:1;height:38px;border:none;border-radius:10px;background:#F2B84B;color:#2B1B00;font-size:13px;font-weight:600}</style>
 <nav class="wxbar" aria-label="ตัวอย่างอากาศ"><span>อากาศ</span>
