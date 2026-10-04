@@ -31,9 +31,9 @@ const SKY = {
   rain:  'linear-gradient(160deg,#2F3A52 0%,#5C6B88 100%)',
 };
 const TXT = {
-  good:  { title: 'อากาศดี',  tip: 'เล่นได้สบายเลยครับ ขอให้วันนี้เสียงเพราะ ทิปเยอะ' },
-  cloud: { title: 'ฟ้าครึ้ม',  tip: 'ฝนยังไม่ตก แต่เตรียมผ้าคลุมเครื่องดนตรีไว้ใกล้มือหน่อยนะครับ' },
-  rain:  { title: 'ฝนตก / มีโอกาสฝน', tip: 'ระวังกีตาร์และเครื่องเสียงโดนน้ำ ลองเช็กฟ้าอีกทีก่อนไปตั้งวงนะครับ' },
+  good:  { title: 'อากาศดี',  tip: 'เล่นได้สบายเลยครับ<br>ขอให้วันนี้เสียงเพราะ ทิปเยอะ' },
+  cloud: { title: 'ฟ้าครึ้ม',  tip: 'ฝนยังไม่ตก แต่เตรียมผ้าคลุมเครื่องดนตรี<br>ไว้ใกล้มือหน่อยนะครับ' },
+  rain:  { title: 'ฝนตก / มีโอกาสฝน', tip: 'ระวังกีต้าร์และเครื่องดนตรีโดนน้ำ<br>ลองเช็คฟ้าอีกทีก่อนไปตั้งเครื่องนะครับ' },
 };
 
 /* ---------- ดึงและจัดกลุ่มอากาศ ---------- */
@@ -75,10 +75,10 @@ css.textContent = `
 .wx-venue{font-size:14px;color:#B9C4E0}
 .wx-title{font-family:var(--display,inherit);font-size:30px;font-weight:700;letter-spacing:-.02em;color:#fff;line-height:1.15}
 .wx-row{display:flex;gap:10px;width:100%;margin-top:6px}
-.wx-row>div{flex:1;background:rgba(255,255,255,.1);border-radius:18px;padding:12px}
+.wx-row>div{flex:1;background:rgba(6,11,26,.62);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:12px}
 .wx-row b{display:block;font-size:26px;color:#fff;letter-spacing:-.02em}
 .wx-row span{font-size:13px;color:#B9C4E0}
-.wx-tip{font-size:15px;color:#E8ECF7;margin:6px 0 10px}
+.wx-tip{font-size:15px;line-height:1.6;color:#E8ECF7;margin:8px 0 12px}
 .wx-hint{font-size:13px;color:#8D98B8}
 `;
 document.head.appendChild(css);
