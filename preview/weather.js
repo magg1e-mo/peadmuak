@@ -68,14 +68,14 @@ css.textContent = `
 .wx-chip .wi svg{width:26px;height:26px}
 .wx-chip .wm{flex:1;line-height:1.25}
 .wx-chip .wm small{display:block;font-weight:500;color:var(--ink-2,#566079);font-size:13px}
-.wx-bg{position:fixed;inset:0;z-index:60;background:rgba(8,14,32,.86);display:flex;align-items:center;justify-content:center;padding:24px}
+.wx-bg{position:fixed;inset:0;z-index:60;background:rgba(8,14,32,.62);display:flex;align-items:center;justify-content:center;padding:24px}
 .wx-sheet{width:100%;max-width:340px;padding:0;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;color:#fff}
 .wx-ico{width:112px;height:112px;border-radius:32px;box-shadow:0 8px 30px rgba(0,0,0,.35);display:grid;place-items:center}
 .wx-ico svg{width:72px;height:72px}
 .wx-venue{font-size:14px;color:#B9C4E0}
 .wx-title{font-family:var(--display,inherit);font-size:30px;font-weight:700;letter-spacing:-.02em;color:#fff;line-height:1.15}
 .wx-row{display:flex;gap:10px;width:100%;margin-top:6px}
-.wx-row>div{flex:1;position:relative;background:rgba(255,255,255,.14);-webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%);border:1px solid rgba(255,255,255,.22);border-radius:22px;padding:12px}
+.wx-row>div{flex:1;position:relative;background:rgba(255,255,255,.07);-webkit-backdrop-filter:blur(26px) saturate(180%) brightness(1.08);backdrop-filter:blur(26px) saturate(180%) brightness(1.08);border:1px solid rgba(255,255,255,.3);border-radius:22px;padding:12px}
 .wx-row b{position:relative;display:block;font-size:26px;color:#fff;letter-spacing:-.02em}
 .wx-row span{position:relative;font-size:13px;color:#DCE3F5}
 .wx-tip{font-size:15px;line-height:1.6;color:#E8ECF7;margin:8px 0 12px}
