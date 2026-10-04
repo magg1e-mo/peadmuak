@@ -169,5 +169,10 @@
   <button data-v="login">ล็อกอิน</button><button data-v="start">เริ่มรอบ</button><button data-v="live">ระหว่างเล่น</button><button data-v="close">นับยอด</button><button data-v="stats">สถิติ</button>
 </nav>
 <script type="module" src="perf-demo.js?v=1"></script>
+<nav class="demobar" style="bottom:54px;background:rgba(20,33,61,.94)" aria-label="ตัวอย่างอากาศ"><span>อากาศ</span>
+  <button onclick="__wx.open('good')">อากาศดี</button><button onclick="__wx.open('cloud')">ครึ้ม</button><button onclick="__wx.open('rain')">ฝนตก</button>
+</nav>
+<script type="module" src="weather.js?v=1"></script>
+
 </body>
 </html>
