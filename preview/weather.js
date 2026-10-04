@@ -8,7 +8,7 @@ const COORDS = {
   'เลาะเลย':   { lat: 17.486, lon: 101.722 },
   'ชุมแพ':     { lat: 16.540, lon: 102.100 },
   'เชียงคาน':  { lat: 17.899, lon: 101.670 },
-  'หนองปัง':   { lat: 17.486, lon: 101.722 }, // ประมาณ: ใช้ตัวเมืองเลยไปก่อน แก้พิกัดจริงได้
+  'หนองปัง':   { lat: 16.396, lon: 102.134 }, // ริมหนองปัง อ.ภูเขียว จ.ชัยภูมิ (ตัวอำเภอ)
 };
 
 const $ = (id) => document.getElementById(id);
@@ -63,11 +63,10 @@ async function getWeather(name) {
 /* ---------- UI ---------- */
 const css = document.createElement('style');
 css.textContent = `
-.wx-chip{display:flex;align-items:center;gap:10px;width:100%;min-height:52px;padding:8px 14px;border:1.5px solid var(--line,#E6DCC6);border-radius:16px;background:#fff;color:var(--ink,#14213D);font-size:15px;font-weight:600;text-align:left}
-.wx-chip .wi{width:34px;height:34px;border-radius:12px;background:var(--navy,#142652);display:grid;place-items:center;flex-shrink:0}
-.wx-chip .wi svg{width:26px;height:26px}
-.wx-chip .wm{flex:1;line-height:1.25}
-.wx-chip .wm small{display:block;font-weight:500;color:var(--ink-2,#566079);font-size:13px}
+.wx-chip{display:block;flex-shrink:0;margin-left:auto;padding:0;border:0;background:none;line-height:0;cursor:pointer}
+.wx-chip[hidden]{display:none}
+.wx-chip .wi{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;box-shadow:0 2px 8px rgba(20,38,82,.18)}
+.wx-chip .wi svg{width:30px;height:30px}
 .wx-bg{position:fixed;inset:0;z-index:60;background:rgba(8,14,32,.78);display:flex;align-items:center;justify-content:center;padding:24px}
 .wx-sheet{width:100%;max-width:340px;padding:0;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;color:#fff}
 .wx-ico{width:112px;height:112px;border-radius:32px;box-shadow:0 8px 30px rgba(0,0,0,.35);display:grid;place-items:center}
@@ -147,7 +146,8 @@ function paintChip(name, w) {
   if (!chip) return;
   if (!w) { chip.hidden = true; return; }
   chip.hidden = false;
-  chip.innerHTML = `<span class="wi" style="background:${SKY[w.kind]}">${ICONS[w.kind]}</span><span class="wm">${TXT[w.kind].title} · ${w.temp}°<small>${name ? name.replace(/</g, '&lt;') : ''} · โอกาสฝน ${w.prob}%</small></span>`;
+  chip.innerHTML = `<span class="wi" style="background:${SKY[w.kind]}">${ICONS[w.kind]}</span>`;
+  chip.setAttribute('aria-label', `${TXT[w.kind].title} ${w.temp}° โอกาสฝน ${w.prob}%`);
   chip.onclick = () => openSheet(name, w);
 }
 
@@ -174,7 +174,8 @@ function init() {
   const start = $('pStart'), venues = $('venues');
   if (!start || !venues) return;
   chip = document.createElement('button'); chip.type = 'button'; chip.className = 'wx-chip'; chip.hidden = true;
-  venues.before(chip);
+  const h = start.querySelector('.display');
+  if (h) { h.style.display = 'flex'; h.style.alignItems = 'center'; h.style.justifyContent = 'space-between'; h.appendChild(chip); } else venues.before(chip);
   venues.addEventListener('click', () => {
     const n = selectedName(); if (!n) { paintChip('', null); return; }
     store.set('wx_venue', n); refresh(n, false);

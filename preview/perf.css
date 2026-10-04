@@ -97,13 +97,11 @@ body .sheet-grab { background: #D9D2BF; }
 
 /* ===== เก็บหน้าให้คลีน: แท็บย่อเป็นไอคอนที่หัวแอป + ป้ายรอบค้างนับยอดบรรทัดเดียว ===== */
 .tabs { display: none; }
-.pbar-stats { width: 40px; height: 40px; border-radius: 14px; background: #24407F; color: #fff; border: 0; display: grid; place-items: center; flex-shrink: 0; padding: 0; cursor: pointer; }
+.pbar-stats { position: relative; width: 40px; height: 40px; border-radius: 14px; background: #24407F; color: #fff; border: 0; display: grid; place-items: center; flex-shrink: 0; padding: 0; cursor: pointer; }
 .pbar-stats svg { width: 22px; height: 22px; }
 .pbar-stats:active { background: #2D4C94; }
 .pbar-stats .ic-back { display: none; }
 .pbar-stats.back .ic-back { display: block; }
 .pbar-stats.back .ic-chart { display: none; }
-.uc-chip { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; min-height: 40px; padding: 0 14px; border-radius: 99px; border: 0; background: #FFF1CC; color: #6B4500; font-size: 14px; font-weight: 600; cursor: pointer; }
-.uc-chip i { width: 8px; height: 8px; border-radius: 99px; background: #E2A62E; flex-shrink: 0; }
-.uc-chip .uc-arrow { font-size: 18px; line-height: 1; margin-left: 2px; }
-.uc-chip[aria-expanded="true"] .uc-arrow { display: inline-block; transform: rotate(90deg); }
+.pbar-stats .dot { display: none; position: absolute; top: -3px; right: -3px; width: 13px; height: 13px; border-radius: 99px; background: #E5484D; border: 2.5px solid var(--navy); box-sizing: border-box; }
+.pbar-stats.has-dot .dot { display: block; }
