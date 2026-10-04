@@ -120,7 +120,7 @@ css.textContent = `
 `;
 document.head.appendChild(css);
 
-let chip = null, shown = false, curName = '';
+let chip = null, shown = false, curName = '', poppedFor = '';
 
 function openSheet(name, w) {
   closeSheet(true);
@@ -178,14 +178,14 @@ function init() {
   if (h) { h.style.display = 'flex'; h.style.alignItems = 'center'; h.style.justifyContent = 'space-between'; h.appendChild(chip); } else venues.before(chip);
   venues.addEventListener('click', () => {
     const n = selectedName(); if (!n) { paintChip('', null); return; }
-    store.set('wx_venue', n); refresh(n, false);
+    store.set('wx_venue', n); refresh(n, n !== poppedFor); poppedFor = n; // ขึ้นป๊อปอัปตอนแตะเลือกสถานที่ (ไม่ซ้ำถ้าแตะที่เดิม)
   });
   const onShow = () => {
     if (start.hidden || shown) return;
     if (!document.querySelector('#venues .venue')) return; // รอปุ่มสถานที่ขึ้นก่อน
     shown = true;
     const n = selectedName() || defaultName();
-    if (n) refresh(n, true);
+    if (n) refresh(n, false); // ตอนเปิดแอปแค่โชว์ไอคอน ไม่เด้งป๊อปอัป
   };
   new MutationObserver(onShow).observe(start, { attributes: true, attributeFilter: ['hidden'] });
   new MutationObserver(onShow).observe(venues, { childList: true });
