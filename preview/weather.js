@@ -81,12 +81,13 @@ css.textContent = `
 .wx-tip{font-size:15px;line-height:1.6;color:#E8ECF7;margin:8px 0 12px}
 .wx-hint{font-size:13px;color:#8D98B8}
 /* แอนิเมชันเข้า/ออก (ทับกฎ animation:none ของหน้าคนเล่นด้วย !important เฉพาะป๊อปอัปนี้) */
-@keyframes wxFade{from{opacity:0}to{opacity:1}}
-@keyframes wxPop{0%{opacity:0;transform:translateY(28px) scale(.9)}55%{opacity:1;transform:translateY(-5px) scale(1.025)}100%{opacity:1;transform:none}}
+@keyframes wxFade{from{background-color:rgba(8,14,32,0)}to{background-color:rgba(8,14,32,.78)}}
+@keyframes wxPop{0%{transform:translateY(28px) scale(.9)}55%{transform:translateY(-5px) scale(1.025)}100%{transform:none}}
 @keyframes wxIcon{0%{opacity:0;transform:scale(.55) rotate(-8deg)}60%{opacity:1;transform:scale(1.1) rotate(2deg)}100%{opacity:1;transform:none}}
 @keyframes wxUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-@keyframes wxOut{from{opacity:1}to{opacity:0}}
-@keyframes wxOutS{from{opacity:1;transform:none}to{opacity:0;transform:translateY(10px) scale(.96)}}
+@keyframes wxOut{from{background-color:rgba(8,14,32,.78)}to{background-color:rgba(8,14,32,0)}}
+@keyframes wxOutC{from{opacity:1}to{opacity:0}}
+@keyframes wxOutS{from{transform:none}to{transform:translateY(10px) scale(.96)}}
 .wx-bg{animation:wxFade .3s ease both !important}
 .wx-sheet{animation:wxPop .6s cubic-bezier(.2,.85,.25,1) both !important}
 .wx-ico{animation:wxIcon .65s cubic-bezier(.2,.9,.3,1.1) .1s both !important}
@@ -98,6 +99,7 @@ css.textContent = `
 .wx-hint{animation:wxUp .5s ease-out .54s both !important}
 .wx-bg.out{animation:wxOut .22s ease forwards !important}
 .wx-bg.out .wx-sheet{animation:wxOutS .22s ease forwards !important}
+.wx-bg.out .wx-sheet>*:not(.wx-row),.wx-bg.out .wx-row>div{animation:wxOutC .22s ease forwards !important}
 @media (prefers-reduced-motion:reduce){.wx-bg,.wx-bg *{animation:none !important}}
 `;
 document.head.appendChild(css);
