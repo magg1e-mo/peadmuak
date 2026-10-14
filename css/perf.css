@@ -106,3 +106,14 @@ body .sheet-grab { background: #D9D2BF; }
 .pbar-stats.back .ic-chart { display: none; }
 .pbar-stats .dot { display: none; position: absolute; top: -3px; right: -3px; width: 13px; height: 13px; border-radius: 99px; background: #E5484D; border: 2.5px solid var(--navy); box-sizing: border-box; }
 .pbar-stats.has-dot .dot { display: block; }
+
+/* ===== จัดหน้าระหว่างเล่นใหม่: กดง่ายด้วยมือเดียว ===== */
+.pbar-stats { width: 48px; height: 48px; }
+#pLive .small { font-size: 14.5px; }
+#pLive .tiny { font-size: 13.5px; }
+#pLive .btn.undo { height: 44px; min-width: 76px; padding: 0 16px; }
+#pLive .chips { gap: 10px; }
+#pLive .chip { height: 62px; font-size: 20px; }
+#pLive .card > .row { margin-top: 4px; }
+#pLive .end-round { margin-top: 10px; height: 54px; color: #8A2B2B; border-color: #E8C9C9; }
+#pLive .end-round:active:not(:disabled) { background: #FBEDED; }
