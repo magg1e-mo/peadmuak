@@ -2,18 +2,19 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#142652">
 <title>หน้าคนเล่น · Moshi</title>
 <link rel="icon" type="image/png" sizes="192x192" href="../icons/icon-192.png">
 <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<link rel="manifest" href="../manifest.webmanifest">
 <meta name="apple-mobile-web-app-title" content="Moshi">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/app.css">
-<link rel="stylesheet" href="perf.css?v=3">
+<link rel="stylesheet" href="perf.css?v=20">
 <script>
 /* กันซูมแบบแอปจริง: iOS ไม่สนใจ user-scalable=no จึงดักท่า pinch เอง (double-tap กันด้วย touch-action ใน CSS เพื่อไม่ให้กดรัวๆ พลาด) */
 ['gesturestart','gesturechange','gestureend'].forEach(function(e){document.addEventListener(e,function(ev){ev.preventDefault();});});
@@ -33,6 +34,7 @@
     <span id="pbarState" class="pbar-state">ยังไม่ได้เล่น</span>
     <button id="btnStatsIcon" class="pbar-stats" type="button" aria-label="สถิติ"><svg class="ic-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V11M12 20V4M19 20v-6"/></svg><svg class="ic-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg><span class="dot"></span></button>
   </header>
+
 
   <!-- ล็อกอิน -->
   <section id="vLogin" class="col grow center" style="gap:18px" hidden>
@@ -97,13 +99,15 @@
           <div class="row" style="gap:8px"><span class="live-dot"></span><span class="live-label" id="timer">00:00:00</span></div>
           <div class="small muted" id="liveVenue"></div>
         </div>
-        <button id="btnEnd" class="btn ghost sm" type="button">จบรอบ</button>
       </div>
 
       <div class="card">
-        <div class="col" style="gap:4px">
-          <div class="small muted">รายรับรอบนี้</div>
-          <div class="money" id="total">฿0</div>
+        <div class="row between" style="align-items:flex-start">
+          <div class="col" style="gap:4px">
+            <div class="small muted">รายรับรอบนี้</div>
+            <div class="money" id="total">฿0</div>
+          </div>
+          <button id="btnUndo" class="btn ghost sm undo" type="button" aria-label="ย้อนรายการล่าสุด">ย้อน</button>
         </div>
         <div class="split">
           <div><div class="tiny muted">เงินสด</div><div style="font-weight:700" id="cash">฿0</div></div>
@@ -117,7 +121,6 @@
         <div class="row">
           <input id="addCustom" class="input" type="number" inputmode="decimal" min="0" placeholder="ยอดอื่น" style="height:44px">
           <button id="btnAddCustom" class="btn sm" type="button">เพิ่ม</button>
-          <button id="btnUndo" class="btn ghost sm" type="button">ย้อน</button>
         </div>
       </div>
 
@@ -131,6 +134,8 @@
         <div id="queue" class="col" style="gap:10px"></div>
         <div id="qEmpty" class="card muted small" hidden>ยังไม่มีคำขอ เล่นเพลงของคุณต่อได้เลย</div>
       </div>
+
+      <button id="btnEnd" class="btn ghost end-round" type="button">จบรอบเล่น</button>
     </div>
 
     <!-- สถิติ -->
@@ -165,10 +170,10 @@
   <div id="errorBox" class="note warn" hidden></div>
 </main>
 <div id="toast" class="toast" hidden></div>
-<nav class="demobar" aria-label="ตัวอย่างหน้า">
-  <span>ตัวอย่าง</span>
-  <button data-v="login">ล็อกอิน</button><button data-v="start">เริ่มรอบ</button><button data-v="live">ระหว่างเล่น</button><button data-v="close">นับยอด</button><button data-v="stats">สถิติ</button>
-</nav>
+<script>
+/* แถบหัว: ซ่อนตอนยังไม่ล็อกอิน */
+(function(){var bar=document.querySelector('.pbar'),lg=document.getElementById('vLogin');function s(){bar.hidden=!lg.hidden;}new MutationObserver(s).observe(lg,{attributes:true,attributeFilter:['hidden']});s();})();
+</script>
 <script>
 /* ไอคอนสถิติที่หัวแอป + จุดแดงเมื่อมีรอบค้างนับยอด (ไม่แตะโค้ดหลัก: แค่สั่งคลิกแท็บเดิมที่ซ่อนอยู่) */
 (function(){
@@ -183,12 +188,16 @@
   document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('button[data-act="closeround"]');if(b&&ts.getAttribute('aria-selected')==='true')tl.click();},true);
 })();
 </script>
+<nav class="demobar" aria-label="ตัวอย่างหน้า">
+  <span>ตัวอย่าง</span>
+  <button data-v="login">ล็อกอิน</button><button data-v="start">เริ่มรอบ</button><button data-v="live">ระหว่างเล่น</button><button data-v="close">นับยอด</button><button data-v="stats">สถิติ</button>
+</nav>
 <script type="module" src="perf-demo.js?v=1"></script>
 <style>.wxbar{position:fixed;left:0;right:0;bottom:56px;z-index:40;display:flex;gap:6px;align-items:center;padding:8px 10px;background:rgba(20,33,61,.94)}.wxbar span{color:#B9C4E0;font-size:12px}.wxbar button{flex:1;height:38px;border:none;border-radius:10px;background:#F2B84B;color:#2B1B00;font-size:13px;font-weight:600}</style>
 <nav class="wxbar" aria-label="ตัวอย่างอากาศ"><span>อากาศ</span>
   <button onclick="__wx.open('good')">อากาศดี</button><button onclick="__wx.open('cloud')">ครึ้ม</button><button onclick="__wx.open('rain')">ฝนตก</button>
 </nav>
-<script type="module" src="weather.js?v=15"></script>
+<script type="module" src="weather.js?v=16"></script>
 
 </body>
 </html>

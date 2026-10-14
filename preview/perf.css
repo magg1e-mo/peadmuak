@@ -10,15 +10,15 @@
 /* ไม่มีแอนิเมชันเลย: เรียบ เร็ว กดแล้วเห็นผลทันที */
 *, *::before, *::after { animation: none !important; transition: none !important; }
 body { background: var(--cream); }
-.wrap { padding: 14px 16px 96px; gap: 14px; }
+.wrap { padding: calc(env(safe-area-inset-top, 0px) + 14px) 16px 28px; gap: 14px; }
 
 /* แถบหัว */
 .pbar { display: flex; align-items: center; gap: 12px; background: var(--navy); color: #fff; border-radius: 20px; padding: 10px 14px 10px 10px; }
-.pbar-mark { width: 44px; height: 44px; border-radius: 14px; background: rgba(255,255,255,.1); display: grid; place-items: center; flex-shrink: 0; }
+.pbar-mark { width: 44px; height: 44px; border-radius: 14px; background: #24407F; display: grid; place-items: center; flex-shrink: 0; }
 .pbar-name { display: flex; flex-direction: column; line-height: 1.15; flex: 1; }
 .pbar-name b { font-family: var(--display); font-size: 20px; letter-spacing: -.02em; }
 .pbar-name span { font-size: 12.5px; color: #B9C4E0; }
-.pbar-state { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 12px; border-radius: 99px; background: rgba(255,255,255,.12); font-size: 13px; font-weight: 600; color: #C5CCE0; white-space: nowrap; }
+.pbar-state { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 12px; border-radius: 99px; background: #24407F; font-size: 13px; font-weight: 600; color: #C5CCE0; white-space: nowrap; }
 .pbar-state::before { content: ''; width: 8px; height: 8px; border-radius: 99px; background: #8D98B8; }
 .pbar-state.on { color: #fff; }
 .pbar-state.on::before { background: var(--gold); }
@@ -89,11 +89,12 @@ body .sheet-grab { background: #D9D2BF; }
 
 .toast { background: var(--navy); }
 
-/* แถบเลือกหน้าตัวอย่าง (เฉพาะพรีวิว) */
-.demobar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: flex; gap: 6px; align-items: center; padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 0px)); background: rgba(20,33,61,.94); }
-.demobar span { color: #B9C4E0; font-size: 12px; margin-right: 2px; }
-.demobar button { flex: 1; height: 38px; border: none; border-radius: 10px; background: rgba(255,255,255,.1); color: #fff; font-size: 13px; font-weight: 600; padding: 0 4px; }
-.demobar button.on { background: var(--gold); color: #2B1B00; }
+/* ชื่อคนส่ง: ตัวหนา อ่านง่าย */
+.who { font-size: 16px; font-weight: 700; color: var(--ink); }
+.who.none { font-weight: 500; color: var(--ink-2); }
+
+/* ระยะรอยบากบนอยู่ที่ .wrap (ไม่ใช่ตัว html) กันเนื้อหาโดนตัดที่ขอบล่าง */
+:root { padding-top: 0 !important; }
 
 /* ===== เก็บหน้าให้คลีน: แท็บย่อเป็นไอคอนที่หัวแอป + ป้ายรอบค้างนับยอดบรรทัดเดียว ===== */
 .tabs { display: none; }
@@ -105,3 +106,14 @@ body .sheet-grab { background: #D9D2BF; }
 .pbar-stats.back .ic-chart { display: none; }
 .pbar-stats .dot { display: none; position: absolute; top: -3px; right: -3px; width: 13px; height: 13px; border-radius: 99px; background: #E5484D; border: 2.5px solid var(--navy); box-sizing: border-box; }
 .pbar-stats.has-dot .dot { display: block; }
+
+/* ===== จัดหน้าระหว่างเล่นใหม่: กดง่ายด้วยมือเดียว ===== */
+.pbar-stats { width: 48px; height: 48px; }
+#pLive .small { font-size: 14.5px; }
+#pLive .tiny { font-size: 13.5px; }
+#pLive .btn.undo { height: 44px; min-width: 76px; padding: 0 16px; }
+#pLive .chips { gap: 10px; }
+#pLive .chip { height: 62px; font-size: 20px; }
+#pLive .card > .row { margin-top: 4px; }
+#pLive .end-round { margin-top: 10px; height: 54px; color: #8A2B2B; border-color: #E8C9C9; }
+#pLive .end-round:active:not(:disabled) { background: #FBEDED; }
