@@ -12,13 +12,20 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+<link rel="modulepreload" href="js/firebase-public.js">
+<link rel="modulepreload" href="js/config.js">
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js">
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js">
 <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/app.css">
 <link rel="stylesheet" href="css/v2.css?v=1">
 <script>
 ['gesturestart','gesturechange','gestureend'].forEach(function(e){document.addEventListener(e,function(ev){ev.preventDefault();});});
 </script>
-<script src="js/vendor/qrcode.js"></script>
+<script src="js/vendor/qrcode.js" defer></script>
 </head>
 <body>
 
@@ -165,6 +172,6 @@
   <div id="errorBox" class="note warn" hidden></div>
 </main>
 <div id="toast" class="toast" hidden></div>
-<script type="module" src="js/audience-v2.js?v=1"></script>
+<script type="module" src="js/audience-v3.js?v=1"></script>
 </body>
 </html>
