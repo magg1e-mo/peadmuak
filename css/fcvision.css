@@ -1,0 +1,7 @@
+/* ฟอนต์ FC Vision (Fontcraft) ใช้ได้กับโดเมน magg1e-mo.github.io */
+@font-face{font-family:'FC Vision';font-style:normal;font-weight:400;font-display:swap;src:url('../fonts/FCVision-Regular.woff2') format('woff2')}
+@font-face{font-family:'FC Vision';font-style:normal;font-weight:500;font-display:swap;src:url('../fonts/FCVision-Medium.woff2') format('woff2')}
+@font-face{font-family:'FC Vision';font-style:normal;font-weight:600;font-display:swap;src:url('../fonts/FCVision-SemiBold.woff2') format('woff2')}
+@font-face{font-family:'FC Vision';font-style:normal;font-weight:700;font-display:swap;src:url('../fonts/FCVision-Bold.woff2') format('woff2')}
+:root{--display:'FC Vision','Anuphan',system-ui,sans-serif}
+body{font-family:'FC Vision','Anuphan',system-ui,sans-serif}
